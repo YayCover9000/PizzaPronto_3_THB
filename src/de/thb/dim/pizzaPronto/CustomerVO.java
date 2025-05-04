@@ -16,6 +16,7 @@ public class CustomerVO {
     private String gender;
     private LocalDate dateOfBirth;
     private int id;
+    private OrderVO order;
 
     public CustomerVO() {
         this(null, null, null);
@@ -35,14 +36,12 @@ public class CustomerVO {
     }
 
 
-
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CustomerVO that = (CustomerVO) o;
-        return Objects.equals(lastName, that.lastName) && Objects.equals(firstName, that.firstName) && Objects.equals(gender, that.gender) && Objects.equals(dateOfBirth, that.dateOfBirth);
+        return Objects.equals(lastName, that.lastName) && Objects.equals(firstName, that.firstName) && Objects.equals(dateOfBirth, that.dateOfBirth);
     }
 
     @Override
@@ -77,7 +76,22 @@ public class CustomerVO {
         }
     }
 
+    public boolean hasOrder() {
+        if(order != null) {
+            return true;
+        }
+        return false;
+    }
+
 //Setter Getter
+
+
+    public OrderVO getOrder() {
+        return order;
+    }
+    public void setOrder(OrderVO order) {
+        this.order = order;
+    }
 
 
     public static int getNextId() {

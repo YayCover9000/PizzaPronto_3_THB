@@ -43,8 +43,13 @@ public class MenuController {
 				String priceAsString = menuPanel.getPriceTextField().getText().replace(',', '.');
 				float priceAsFloat = 0.0F;
 				
-				if (!priceAsString.equals(""))
-					priceAsFloat = Float.parseFloat(priceAsString);
+				if (!priceAsString.equals("")) {
+					try {
+						priceAsFloat = Float.parseFloat(priceAsString);
+					} catch (NumberFormatException exception) {
+						System.err.println("Input error by price: " + exception.getMessage() );
+					}
+				}
 					
 				for(int i = 0; i < ingredientCount; i++) {
 					ingredients[i] = (String) menuPanel.getIngredientTableModel().getValueAt(i, 0);

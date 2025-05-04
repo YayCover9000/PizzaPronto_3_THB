@@ -9,12 +9,16 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
+import java.util.Vector;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 
 import de.thb.dim.pizzaPronto.CustomerVO;
@@ -141,7 +145,7 @@ public class CustomerController {
 
 					customerPanel.getTableModel().removeRow(customerPanel.getTable().getSelectedRow());
 				}
-				
+						
 			}
 			
 		});
@@ -214,9 +218,9 @@ public class CustomerController {
 				
 			}
 		});
-
 		
 	}
+
 	
 	public void setView(MainView view) {
 		this.view = view;

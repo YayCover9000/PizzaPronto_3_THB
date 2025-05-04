@@ -105,7 +105,7 @@ public class StaffPanel extends JPanel {
 	private void addComponentsToHintPanel(JPanel hintPanel) {
 		hintPanel.setLayout(new GridBagLayout());
 		hintLabel = new JLabel("<html><p><strong><span style=\"font-size: 10px;\">Hinweis</span></strong></p>\n" + 
-				"<p><span style=\"font-size: 10px;\">Es muessen in der Klasse ChefVO zwingend die Methoden hashCode() und equals() implementiert sein, sonst ist es nicht möglich einen neuen Angestellten hinzuzufuegen." +
+				"<p><span style=\"font-size: 10px;\">Es muessen in der Klasse ChefVO zwingend die Methoden hashCode() und equals() implementiert sein, sonst ist es nicht möglich einen neuen Angestellten hinzuzufuegen. " +
 				"Beim Eintragen eines neuen Angestellten wird mit der equals() Methode geprüft, ob sich der gleiche Angestellte bereits in der Liste befindet. Bei korrekter Implementierung wird eine Nachricht angezeigt.\n" +
 				"Mit dem Print Button können die in der Liste ausgewählten Angestellten nochmal ausgegeben werden. Hierfür muss in Klasse ChefVO die toString() Methode implementiert sein.</span></p></html>");
 		GridBagConstraints c = new GridBagConstraints();
