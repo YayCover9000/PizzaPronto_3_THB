@@ -16,6 +16,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 @SuppressWarnings("serial")
 public class MenuPanel extends JPanel {
@@ -39,6 +40,8 @@ public class MenuPanel extends JPanel {
 	private DefaultButton removeButton;
 	private DefaultButton addIngredientButton;
 	private DefaultButton removeIngredientButton;
+	private DefaultButton printButton;
+	private DefaultButton copyButton;
 	private JTable table;
 	private JTable ingredientsTable;
 	private JScrollPane tableScrollPane;
@@ -112,7 +115,10 @@ public class MenuPanel extends JPanel {
 	private void addComponentsToHintPanel(JPanel hintPanel) {
 		hintPanel.setLayout(new GridBagLayout());
 		hintLabel = new JLabel("<html><p><strong><span style=\"font-size: 10px;\">Hinweis</span></strong></p>\n" + 
-				"<p><span style=\"font-size: 10px;\">Um eine neue Pizza hinzuzufuegen, muessen in der Klasse PizzaVO der Intitialisierungskontuktor, die entsprechenden Instanzvariablen und die dazugehoerigen Setter und Getter implementiert sein.</span></p></html>");
+				"<p><span style=\"font-size: 10px;\">Es muessen in der Klasse PizzaVO zwingend die Methoden hashCode(), equals() und calculateAge(), sowie die Instanzvariable id implementiert sein, sonst ist es nicht möglich eine neue Pizza hinzuzufuegen.\n" +
+				"Beim Eintragen einer neuen Pizza wird mit der equals() Methode geprüft, ob sich die gleiche Pizza bereits in der Liste befindet. Bei korrekter Implementierung wird eine Nachricht angezeigt.\n" +
+				"Mit dem Print Button können die in der Liste ausgewählten Gerichte nochmal ausgegeben werden. Hierfür muss in Klasse PizzaVO die toString() Methode implementiert sein.\n" +
+				"Mit dem Copy Button können die ausgewählten Gerichte kopiert werden. Hierfür muss in der Klasse PizzaVO die clone() Methode implementiert sein.</span></p></html>");
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 0;
@@ -259,10 +265,12 @@ public class MenuPanel extends JPanel {
 
 		GridBagConstraints c = new GridBagConstraints();
 
-		String[] columns = { "Type", "Name", "Ingredients", "Price" };
+		String[] columns = { "Type", "Name", "Ingredients", "Price", "hashCode", "Object" };
 		tableModel = new DefaultTableModel();
 		tableModel.setColumnIdentifiers(columns);
 		table = new JTable(tableModel);
+		TableColumnModel tcm = table.getColumnModel();
+		tcm.removeColumn(tcm.getColumn(5));
 		table.setFont(new Font("Arial", Font.PLAIN, 14));
 		table.setRowHeight(30);
 		table.setShowGrid(false);
@@ -276,6 +284,7 @@ public class MenuPanel extends JPanel {
 		tableTopicLabel.setForeground(Color.DARK_GRAY);
 		c.gridx = 0;
 		c.gridy = 0;
+		c.gridwidth = 3;
 		c.anchor = GridBagConstraints.FIRST_LINE_START;
 		c.insets = new Insets(10, 12, 10, 10);
 		tablePanel.add(tableTopicLabel, c);
@@ -287,14 +296,40 @@ public class MenuPanel extends JPanel {
 		c.gridy = 1;
 		c.weightx = 1;
 		c.weighty = 1;
+		c.gridwidth = 3;
 		c.fill = GridBagConstraints.BOTH;
 		c.insets = new Insets(10, 10, 10, 10);
 		tablePanel.add(tableScrollPane, c);
 		
-		removeButton = new DefaultButton("Remove Dish");
+		copyButton = new DefaultButton("Copy Pizza");
 		c.gridx = 0;
 		c.gridy = 2;
 		c.weighty = 0;
+		c.weightx = 1;
+		c.gridwidth = 1;
+		c.fill = GridBagConstraints.NONE;
+		c.anchor = GridBagConstraints.FIRST_LINE_END;
+		c.insets = new Insets(0, 10, 10, 10);
+		tablePanel.add(copyButton, c);
+
+		
+		printButton = new DefaultButton("Print Details");
+		c.gridx = 1;
+		c.gridy = 2;
+		c.weighty = 0;
+		c.weightx = 0;
+		c.gridwidth = 1;
+		c.fill = GridBagConstraints.NONE;
+		c.anchor = GridBagConstraints.FIRST_LINE_END;
+		c.insets = new Insets(0, 10, 10, 10);
+		tablePanel.add(printButton, c);
+		
+		removeButton = new DefaultButton("Remove Dish");
+		c.gridx = 2;
+		c.gridy = 2;
+		c.weighty = 0;
+		c.weightx = 0;
+		c.gridwidth = 1;
 		c.fill = GridBagConstraints.NONE;
 		c.anchor = GridBagConstraints.FIRST_LINE_END;
 		c.insets = new Insets(0, 10, 10, 10);
@@ -521,6 +556,22 @@ public class MenuPanel extends JPanel {
 
 	public void setIngredientTableModel(DefaultTableModel ingredientTableModel) {
 		this.ingredientTableModel = ingredientTableModel;
+	}
+
+	public DefaultButton getPrintButton() {
+		return printButton;
+	}
+
+	public void setPrintButton(DefaultButton printButton) {
+		this.printButton = printButton;
+	}
+
+	public DefaultButton getCopyButton() {
+		return copyButton;
+	}
+
+	public void setCopyButton(DefaultButton copyButton) {
+		this.copyButton = copyButton;
 	}
 
 

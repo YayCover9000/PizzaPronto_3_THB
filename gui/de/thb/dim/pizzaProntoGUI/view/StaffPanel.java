@@ -15,6 +15,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 @SuppressWarnings("serial")
 public class StaffPanel extends JPanel {
@@ -36,6 +37,7 @@ public class StaffPanel extends JPanel {
 	private JComboBox<String> employeeTypeComboBox;
 	private DefaultButton addButton;
 	private DefaultButton removeButton;
+	private DefaultButton printButton;
 	private JTable table;
 	private JScrollPane tableScrollPane;
 	private DefaultTableModel tableModel;
@@ -103,7 +105,9 @@ public class StaffPanel extends JPanel {
 	private void addComponentsToHintPanel(JPanel hintPanel) {
 		hintPanel.setLayout(new GridBagLayout());
 		hintLabel = new JLabel("<html><p><strong><span style=\"font-size: 10px;\">Hinweis</span></strong></p>\n" + 
-				"<p><span style=\"font-size: 10px;\">Um einen Angestellten hinzuzufuegen, muessen in der Klasse ChefVO der Intitialisierungskonstruktor, die entsprechenden Instanzvariablen und die dazugehoerigen Setter und Getter implementiert sein.</span></p></html>");
+				"<p><span style=\"font-size: 10px;\">Es muessen in der Klasse ChefVO zwingend die Methoden hashCode() und equals() implementiert sein, sonst ist es nicht möglich einen neuen Angestellten hinzuzufuegen." +
+				"Beim Eintragen eines neuen Angestellten wird mit der equals() Methode geprüft, ob sich der gleiche Angestellte bereits in der Liste befindet. Bei korrekter Implementierung wird eine Nachricht angezeigt.\n" +
+				"Mit dem Print Button können die in der Liste ausgewählten Angestellten nochmal ausgegeben werden. Hierfür muss in Klasse ChefVO die toString() Methode implementiert sein.</span></p></html>");
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 0;
@@ -195,10 +199,12 @@ public class StaffPanel extends JPanel {
 
 		GridBagConstraints c = new GridBagConstraints();
 
-		String[] columns = { "First Name", "Last Name", "Apron Color" };
+		String[] columns = { "First Name", "Last Name", "Apron Color", "hashCode", "Object" };
 		tableModel = new DefaultTableModel();
 		tableModel.setColumnIdentifiers(columns);
 		table = new JTable(tableModel);
+		TableColumnModel tcm = table.getColumnModel();
+		tcm.removeColumn(tcm.getColumn(4));
 		table.setFont(new Font("Arial", Font.PLAIN, 14));
 		table.setRowHeight(30);
 		table.setShowGrid(false);
@@ -213,6 +219,7 @@ public class StaffPanel extends JPanel {
 		
 		c.gridx = 0;
 		c.gridy = 0;
+		c.gridwidth = 2;
 		c.anchor = GridBagConstraints.FIRST_LINE_START;
 		c.insets = new Insets(10, 12, 10, 10);
 		tablePanel.add(tableTopicLabel, c);
@@ -224,14 +231,28 @@ public class StaffPanel extends JPanel {
 		c.gridy = 1;
 		c.weightx = 1;
 		c.weighty = 1;
+		c.gridwidth = 2;
 		c.fill = GridBagConstraints.BOTH;
 		c.insets = new Insets(10, 10, 10, 10);
 		tablePanel.add(tableScrollPane, c);
 		
-		removeButton = new DefaultButton("Remove Employee");
+		printButton = new DefaultButton("Print Details");
 		c.gridx = 0;
 		c.gridy = 2;
 		c.weighty = 0;
+		c.weightx = 1;
+		c.gridwidth = 1;
+		c.fill = GridBagConstraints.NONE;
+		c.anchor = GridBagConstraints.FIRST_LINE_END;
+		c.insets = new Insets(0, 10, 10, 10);
+		tablePanel.add(printButton, c);
+
+		
+		removeButton = new DefaultButton("Remove Employee");
+		c.gridx = 1;
+		c.gridy = 2;
+		c.weighty = 0;
+		c.weightx = 0;
 		c.fill = GridBagConstraints.NONE;
 		c.anchor = GridBagConstraints.FIRST_LINE_END;
 		c.insets = new Insets(0, 10, 10, 10);
@@ -394,6 +415,38 @@ public class StaffPanel extends JPanel {
 
 	public void setTableModel(DefaultTableModel tableModel) {
 		this.tableModel = tableModel;
+	}
+
+	public JPanel getHeaderPanel() {
+		return headerPanel;
+	}
+
+	public void setHeaderPanel(JPanel headerPanel) {
+		this.headerPanel = headerPanel;
+	}
+
+	public JLabel getPositionLabel() {
+		return positionLabel;
+	}
+
+	public void setPositionLabel(JLabel positionLabel) {
+		this.positionLabel = positionLabel;
+	}
+
+	public JComboBox<String> getEmployeeTypeComboBox() {
+		return employeeTypeComboBox;
+	}
+
+	public void setEmployeeTypeComboBox(JComboBox<String> employeeTypeComboBox) {
+		this.employeeTypeComboBox = employeeTypeComboBox;
+	}
+
+	public DefaultButton getPrintButton() {
+		return printButton;
+	}
+
+	public void setPrintButton(DefaultButton printButton) {
+		this.printButton = printButton;
 	}
 
 }

@@ -25,6 +25,9 @@ public class Main {
 
         System.out.println("cust1 equals cust2? Expected: false, Actual: " + cust1.equals(cust2));
         System.out.println("cust1 equals cust3? Expected: true, Actual: " + cust1.equals(cust3));
+
+        System.out.println("Age of cust1? Expected: 0: " + cust1.calculateAge());
+        System.out.println("Age of cust2? Expected: 26: " + cust2.calculateAge());
     }
 
     private static void testChefVO() {
