@@ -84,6 +84,7 @@ public class OrderController {
 		JLabel genderLabelRight = orderPanel.getGenderLabelRight();
 		JLabel dateOfBirthRight = orderPanel.getDateOfBirthRight();
 		JLabel startedLabelRight = orderPanel.getStartedLabelRight();
+		JLabel streetLabelRight = orderPanel.getStreetLabelRight();
 		itemCountLabel = orderPanel.getItemCountLabel();
 
 		
@@ -108,7 +109,7 @@ public class OrderController {
 				}
 				
 				if(isFound == true) {
-					CustomerVO customer = (CustomerVO) customerTableModel.getValueAt(i-1, 6);
+					CustomerVO customer = (CustomerVO) customerTableModel.getValueAt(i-1, 0);
 					OrderVO order = new OrderVO(LocalDateTime.now(), customer);
 					
 					Object[] row = new Object[8];
@@ -125,6 +126,7 @@ public class OrderController {
 					genderLabelRight.setText(order.getCustomer().getGender());
 					dateOfBirthRight.setText(order.getCustomer().getDateOfBirth().format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
 					itemCountLabel.setText(Integer.toString(order.getIndex()));
+					streetLabelRight.setText(order.getCustomer().getStreet() + " " + order.getCustomer().getHouseNumber());
 					
 					orderTable.setRowSelectionInterval(orderTable.getRowCount()-1, orderTable.getRowCount()-1);
 				}
@@ -146,6 +148,7 @@ public class OrderController {
 				genderLabelRight.setText(order.getCustomer().getGender());
 				dateOfBirthRight.setText(order.getCustomer().getDateOfBirth().format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
 				itemCountLabel.setText(Integer.toString(order.getNumberOfDishes()));
+				streetLabelRight.setText(order.getCustomer().getStreet() + " " + order.getCustomer().getHouseNumber());
 				
 				updateShoppingBasket();
 			}
@@ -161,7 +164,7 @@ public class OrderController {
 				
 				for(int i = 0; i < cnt; i++)
 				{
-					items.add((int) customerTable.getModel().getValueAt(i,0));
+					items.add((int) customerTable.getModel().getValueAt(i,1));
 				}
 				
 				comboBox.setModel(new DefaultComboBoxModel<Integer>(items));				

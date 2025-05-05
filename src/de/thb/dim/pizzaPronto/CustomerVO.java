@@ -1,147 +1,217 @@
 package de.thb.dim.pizzaPronto;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
-import static java.time.Period.between;
+/**
+ * CustomerVO represents objects of customer.
+ * @author Robert Fischer, Gabriele Schmidt
+ * @version 4.0
+ *
+ */
+public class CustomerVO  extends PersonVO{
+	
+	private static int nextId = 0;
+	private int id;
+	
+	private String gender;
+	private LocalDate dateOfBirth;
+	
+	private OrderVO order;
 
-public class CustomerVO {
-    private static int nextId = 0;
-    private String lastName;
-    private String firstName;
-    private String gender;
-    private LocalDate dateOfBirth;
-    private int id;
-    private OrderVO order;
+	/**
+	 * initializing constructor
+	 * Initialize all instance attributes with values. 
+	 * 
+	 * @param lastName - Customer's second name
+	 * @param firstName - Customer's first name
+	 * @param gender - Customer's gender
+	 * @param dateOfBirth - Customer's date of birth
+	 * 
+	 */
+	public CustomerVO(String lastName, String firstName, String street, int houseNumber, String gender, LocalDate dob) {
+		super(lastName, firstName, street, houseNumber);
+		id = nextId;
+		nextId++;
+		setGender(gender);
+		setDateOfBirth(dob);
 
-    public CustomerVO() {
-        this(null, null, null);
-    }
+	}
+	
+	/**
+	 * initializing constructor
+	 * Initialize all instance attributes with values. 
+	 * 
+	 * @param lastName - Customer's second name
+	 * @param firstName - Customer's first name
+	 * @param dateOfBirth - Customer's date of birth
+	 * 
+	 */
+	public CustomerVO(String lastName, String firstName, LocalDate dob) {
+		this(lastName, firstName, null, 0, null, dob);
 
-    public CustomerVO(String lastName, String firstName, LocalDate dateOfBirth) {
-        this(lastName,firstName,null,dateOfBirth);
-    }
+	}
+	
+	
 
-    public CustomerVO(String lastName, String firstName, String gender, LocalDate dateOfBirth) {
-        setLastName(lastName);
-        setFirstName(firstName);
-        setGender(gender);
-        setDateOfBirth(dateOfBirth);
-        this.id = nextId;
-        nextId++;
-    }
+	/**
+	 * default constructor 
+	 * calls initializing constructor with default values for instance attributes
+	 * 
+	 */
+	public CustomerVO() {
+		this(null, null, null);
+		
+	}
+	
+	/**
+	 * the age of customer is a drived attribute, i.e. age is only calculated 
+	 * in the method and is not a instance variable
+	 * 
+	 * @return age - short
+	 */
+	public short calculateAge() {
+		short alter = -1;
+		Period age;
+		LocalDate today = LocalDate.now();
+
+		if (dateOfBirth != null) {
+			age = Period.between(dateOfBirth, today);
+			alter = (short) age.getYears();
+		}
+		return alter;
+	}
+	
+	/**
+	 * Checks whether there is a current orderVO or not
+	 * 
+	 * @return true => orderVO available, false => there is no orderVO
+	 * 
+	 */
+	public boolean hasOrder() {
+		if (order != null) return true;
+		else return false;
+	}
+	
+	//Java default operations
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(dateOfBirth);
+		return result;
+	}
+	
+//	@Override
+//	public int hashCode() {
+//		final int prime = 31;
+//		int result = super.hashCode();
+//		result = prime * result + ((dateOfBirth == null) ? 0 : dateOfBirth.hashCode());
+//		return result;
+//	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CustomerVO other = (CustomerVO) obj;
+		return Objects.equals(dateOfBirth, other.dateOfBirth);
+	}
+
+//
+//	@Override
+//	public boolean equals(Object obj) {
+//		if (this == obj)
+//			return true;
+//		if (!super.equals(obj))
+//			return false;
+//		if (getClass() != obj.getClass())
+//			return false;
+//		CustomerVO other = (CustomerVO) obj;
+//		if (dateOfBirth == null) {
+//			if (other.dateOfBirth != null)
+//				return false;
+//		} else if (!dateOfBirth.equals(other.dateOfBirth))
+//			return false;
+//		return true;
+//	}
+
+	
+	@Override
+	public String toString() {
+		return String.format("Customer:\n" + "\tId: %d\n" + 
+				"\t%s"
+				+ "\tGender: %s\n" + "\tDate of Birth: %s\n" + "\tAge: %d\n"
+						+ "\thas a current order: %b",
+				this.getId(), super.toString(),
+				this.getGender(), this.dobToString(),
+				this.calculateAge(),
+				hasOrder());
+	}
+	
+
+	/**
+	 * Returns the birth date in human-readable form.
+	 * 
+	 * @return - the complete string
+	 *  
+	 */
+	private String dobToString() {
+		return dateOfBirth.format(DateTimeFormatter.ofPattern("dd MMM yyyy"));
+	}
+	
+	//Setter getter
+	//only getter für nextID and id
+	public static int getNextId() {
+		return nextId;
+	}
+	
+	public int getId() {
+		return id;
+	}
 
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CustomerVO that = (CustomerVO) o;
-        return Objects.equals(lastName, that.lastName) && Objects.equals(firstName, that.firstName) && Objects.equals(dateOfBirth, that.dateOfBirth);
-    }
+	public String getGender() {
+		return gender;
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(lastName, firstName, gender, dateOfBirth);
-    }
-@Override
-    public String toString() {
-        return lastName + "," + firstName + "," + gender + "," + dobToString() + "," + calculateAge() + "," + id;
-    }
-    //Hilfsmethode
-    private String dobToString() {
-        if (dateOfBirth == null) {
-            return "";
-        }
-        return dateOfBirth.format(DateTimeFormatter.ofPattern("dd MMM yyyy"));
-    }
-    //calculate Age
-    public short calculateAge() {
-        if (dateOfBirth == null) {
-            return -1;
-        } else {
-            LocalDate today = LocalDate.now();
-            int years = today.getYear() - dateOfBirth.getYear();
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+	
 
-            // Wenn der Geburtstag in diesem Jahr noch nicht war, 1 Jahr abziehen
-            if (today.getDayOfYear() < dateOfBirth.getDayOfYear()) {
-                years--;
-            }
+	public LocalDate getDateOfBirth() {
+		return dateOfBirth;
+	}
 
-            return (short) years;
-        }
-    }
+	
 
-    public boolean hasOrder() {
-        if(order != null) {
-            return true;
-        }
-        return false;
-    }
+	/**
+	 * older than 17 years else dateOfBirth is set null
+	 * 
+	 * @param dateOfBirth
+	 *        -     java.time.LocalDate
+	 */
+	public void setDateOfBirth(LocalDate dob) {
+		this.dateOfBirth = dob;
+		if (this.calculateAge() < 18)
+			this.dateOfBirth = null;
+	}
+	
+	public OrderVO getOrder() {
+		return order;
+	}
 
-//Setter Getter
+	public void setOrder(OrderVO orderVO) {
+		this.order = orderVO;
+	}
+	
 
-
-    public OrderVO getOrder() {
-        return order;
-    }
-    public void setOrder(OrderVO order) {
-        this.order = order;
-    }
-
-
-    public static int getNextId() {
-        return nextId;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        if (Objects.nonNull(lastName)) {
-            this.lastName = lastName;
-        }
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        if (Objects.nonNull(firstName)) {
-            this.firstName = firstName;
-        }
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        if (gender != null && !gender.isEmpty()) {
-            this.gender = gender;
-        }
-    }
-
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-            short age = calculateAge();
-            if (age < 18) {
-                this.dateOfBirth = null;
-            }
-    }
-
-}
+	
+} // end of class
