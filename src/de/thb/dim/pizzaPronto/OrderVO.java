@@ -7,8 +7,7 @@ import java.util.Objects;
  * The class OrderVO contains the begin and the end, i.e. delivery, of order as a
  * date timestamp Furthermore the class provides an objectmamagement of the
  * ordered pizzas (later dishes). The order has an identifiers.
- * 
- * @author Gabriele Schmidt
+ *
  * @version 2.0
  *
  */

@@ -7,8 +7,7 @@ import java.util.Objects;
  * The methods of the class PizzaVO are tested.
  * 
  * Special assert statements are used for testing <br>
- * 
- * @author Gabriele Schmidt
+ *
  * @version 4.0 10.03.2020
  */
 public class PizzaVO {

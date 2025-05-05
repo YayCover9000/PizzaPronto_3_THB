@@ -6,7 +6,6 @@ import java.util.Objects;
 
 /**
  * CustomerVO represents objects of customer.
- * @author Robert Fischer, Gabriele Schmidt
  * @version 4.0
  *
  */

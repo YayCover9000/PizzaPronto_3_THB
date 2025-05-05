@@ -2,8 +2,7 @@ package de.thb.dim.pizzaPronto;
 import java.awt.Color;
 
 /**
- * ChefVO represents the objects of chef 
- * @author Robert Fischer, Gabriele Schmidt
+ * ChefVO represents the objects of chef
  * @version 3.0
  *
  */

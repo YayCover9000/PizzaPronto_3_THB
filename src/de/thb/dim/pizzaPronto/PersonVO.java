@@ -4,8 +4,7 @@ import java.util.Objects;
 
 /**
  * PersonVO is the superclass containing basic attributes
- * 
- * @author Gabrile Schmidt
+ *
  * @version 3.0
  * @since 30.03.2023
  *

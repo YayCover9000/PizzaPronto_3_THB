@@ -1,5 +1,6 @@
 package de.thb.dim.pizzaPronto;
 
+//NEU
 public class DeliveryManVO extends EmployeeVO  {
 	
 	private String driverLicence;

@@ -3,8 +3,7 @@ package de.thb.dim.pizzaPronto;
 import java.util.Objects;
 
 /**
- * EmployeeVO represents an object of employees and inherits from PersonVO 
- * @author Robert Fischer
+ * EmployeeVO represents an object of employees and inherits from PersonVO
  * @version 2.0
  */
 public  class EmployeeVO extends PersonVO {
