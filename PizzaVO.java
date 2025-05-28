@@ -1,6 +1,7 @@
 package de.thb.dim.pizzaPronto;
 
-import javax.swing.*;
+import de.thb.dim.pizzaPronto.DishVO;
+
 import java.util.Arrays;
 import java.util.Objects;
 

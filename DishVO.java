@@ -1,9 +1,7 @@
 package de.thb.dim.pizzaPronto;
-import jdk.jfr.Label;
 
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.*;
 
 public abstract class DishVO {
     protected int number;

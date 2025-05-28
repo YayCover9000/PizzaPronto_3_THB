@@ -1,4 +1,7 @@
 package de.thb.dim.pizzaPronto;
+import de.thb.dim.pizzaPronto.OrderVO;
+import de.thb.dim.pizzaPronto.PersonVO;
+
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -10,7 +13,7 @@ import java.util.Objects;
  * @version 4.0
  *
  */
-public class CustomerVO  extends PersonVO{
+public class CustomerVO  extends PersonVO {
 	
 	private static int nextId = 0;
 	private int id;
@@ -22,13 +25,6 @@ public class CustomerVO  extends PersonVO{
 
 	/**
 	 * initializing constructor
-	 * Initialize all instance attributes with values. 
-	 * 
-	 * @param lastName - Customer's second name
-	 * @param firstName - Customer's first name
-	 * @param gender - Customer's gender
-	 * @param dateOfBirth - Customer's date of birth
-	 * 
 	 */
 	public CustomerVO(String lastName, String firstName, String street, int houseNumber, String gender, LocalDate dob) {
 		super(lastName, firstName, street, houseNumber);
@@ -41,12 +37,6 @@ public class CustomerVO  extends PersonVO{
 	
 	/**
 	 * initializing constructor
-	 * Initialize all instance attributes with values. 
-	 * 
-	 * @param lastName - Customer's second name
-	 * @param firstName - Customer's first name
-	 * @param dateOfBirth - Customer's date of birth
-	 * 
 	 */
 	public CustomerVO(String lastName, String firstName, LocalDate dob) {
 		this(lastName, firstName, null, 0, null, dob);
@@ -103,14 +93,6 @@ public class CustomerVO  extends PersonVO{
 		result = prime * result + Objects.hash(dateOfBirth);
 		return result;
 	}
-	
-//	@Override
-//	public int hashCode() {
-//		final int prime = 31;
-//		int result = super.hashCode();
-//		result = prime * result + ((dateOfBirth == null) ? 0 : dateOfBirth.hashCode());
-//		return result;
-//	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -124,23 +106,6 @@ public class CustomerVO  extends PersonVO{
 		return Objects.equals(dateOfBirth, other.dateOfBirth);
 	}
 
-//
-//	@Override
-//	public boolean equals(Object obj) {
-//		if (this == obj)
-//			return true;
-//		if (!super.equals(obj))
-//			return false;
-//		if (getClass() != obj.getClass())
-//			return false;
-//		CustomerVO other = (CustomerVO) obj;
-//		if (dateOfBirth == null) {
-//			if (other.dateOfBirth != null)
-//				return false;
-//		} else if (!dateOfBirth.equals(other.dateOfBirth))
-//			return false;
-//		return true;
-//	}
 
 	
 	@Override

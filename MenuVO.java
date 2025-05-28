@@ -1,5 +1,10 @@
 package de.thb.dim.pizzaPronto;
 
+import de.thb.dim.pizzaPronto.DessertVO;
+import de.thb.dim.pizzaPronto.DishVO;
+import de.thb.dim.pizzaPronto.PastaVO;
+import de.thb.dim.pizzaPronto.PizzaVO;
+
 import java.text.DecimalFormat;
 
 public class MenuVO {

@@ -1,5 +1,7 @@
 package de.thb.dim.pizzaPronto;
 
+import de.thb.dim.pizzaPronto.DishVO;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -7,26 +9,22 @@ import java.util.Objects;
 public class OrderVO {
 
 	private static final int MAX_DISHES = 10;
-	private static int nextOrderNo = 0;
 	private int orderNo;
 	private String state;
-	private int index;
+	private int index = 0;
 	private LocalDateTime timestampStartedOrder;
 	private LocalDateTime timestampDeliveredOrder;
-	private DishVO[] shoppingBasket;
 	private CustomerVO customer;
 
-	// Konstruktor ohne timestampDeliveredOrder, state wird auf "started" gesetzt
-	public OrderVO(LocalDateTime timestampStartedOrder, CustomerVO customer) {
-		if (nextOrderNo == 0 || (nextOrderNo / 100000 < LocalDate.now().getYear())) {
-			nextOrderNo = LocalDateTime.now().getYear() * 100000;
-		}
-		this.orderNo = ++nextOrderNo;
-		this.setTimestampStartedOrder(timestampStartedOrder);
+	//Vom Typ DishVO
+	private DishVO[] shoppingBasket = new DishVO[MAX_DISHES];
+
+
+	public OrderVO(int orderNo, String state, LocalDateTime timestampStartedOrder, CustomerVO customer) {
+		this.timestampStartedOrder = LocalDateTime.now();
 		this.customer = customer;
-		this.state = "started";
-		this.index = 0;
-		this.shoppingBasket = new DishVO[MAX_DISHES];
+		this.state = state;
+		this.orderNo = orderNo;
 	}
 
 	// Berechnet den Gesamtpreis aller Gerichte im Warenkorb
@@ -47,7 +45,6 @@ public class OrderVO {
 		}
 	}
 
-
 	public void deleteDish() {
 		if (index > 0) {
 			shoppingBasket[--index] = null;
@@ -57,7 +54,7 @@ public class OrderVO {
 	}
 
 	public DishVO getDish(int index) {
-		if (index >= 0 && index < MAX_DISHES && shoppingBasket[index] != null) {
+		if (index >= 0 && index < this.index) {
 			return shoppingBasket[index];
 		}
 		return null;
@@ -110,6 +107,7 @@ public class OrderVO {
 	public void setState(String state) {
 			this.state = state;
 	}
+
 	// Setter für timestampDeliveredOrder
 	public void setTimestampDeliveredOrder(LocalDateTime timestampDeliveredOrder) {
 		this.timestampDeliveredOrder = timestampDeliveredOrder;
@@ -149,15 +147,19 @@ public class OrderVO {
 		return shoppingBasket;
 	}
 
-	public static int getNextOrderNo() {
-		return nextOrderNo;
-	}
-
 	public int getIndex() {
 		return index;
 	}
 
 	public static int getMAX_DISHES() {
 		return MAX_DISHES;
+	}
+
+	public void setOrderNo(int orderNo) {
+		this.orderNo = orderNo;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
 	}
 }

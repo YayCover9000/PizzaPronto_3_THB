@@ -1,8 +1,10 @@
 package de.thb.dim.pizzaPronto;
 
+import de.thb.dim.pizzaPronto.DishVO;
+
 import java.util.Objects;
 
-public class PastaVO extends DishVO{
+public class PastaVO extends DishVO {
     private int typeOfPasta;
 
     public PastaVO() {this(0, null, null, 0.00f, 0);}
