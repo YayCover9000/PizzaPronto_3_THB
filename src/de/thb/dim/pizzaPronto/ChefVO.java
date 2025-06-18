@@ -1,12 +1,16 @@
 package de.thb.dim.pizzaPronto;
-import java.awt.Color;
+
+import de.thb.dim.pizzaPronto.EmployeeVO;
+
+import java.awt.*;
 
 /**
- * ChefVO represents the objects of chef
+ * ChefVO represents the objects of chef 
+ * @author Robert Fischer, Gabriele Schmidt
  * @version 3.0
  *
  */
-public class ChefVO extends EmployeeVO{
+public class ChefVO extends EmployeeVO {
 	private Color colorApron;
 	
 	/**
