@@ -5,6 +5,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import de.thb.dim.pizzaProntoGUI.controller.CustomerController;
 import de.thb.dim.pizzaProntoGUI.controller.MenuController;
+import de.thb.dim.pizzaProntoGUI.controller.OrderController;
 import de.thb.dim.pizzaProntoGUI.controller.StaffController;
 import de.thb.dim.pizzaProntoGUI.view.MainView;
 
@@ -12,6 +13,8 @@ public class GUI_Main {
 
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
+			
+			@SuppressWarnings("unused")
 			public  void run() {
 				
 				try {
@@ -36,6 +39,7 @@ public class GUI_Main {
 				StaffController staffController = new StaffController(view);
 				CustomerController customerController = new CustomerController(view);
 				MenuController menuController = new MenuController(view);
+				OrderController orderController = new OrderController(view);
 			}
 		});
 

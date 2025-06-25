@@ -1,165 +1,124 @@
 package de.thb.dim.pizzaPronto;
 
-import de.thb.dim.pizzaPronto.DishVO;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class OrderVO {
-
-	private static final int MAX_DISHES = 10;
-	private int orderNo;
-	private String state;
-	private int index = 0;
-	private LocalDateTime timestampStartedOrder;
-	private LocalDateTime timestampDeliveredOrder;
-	private CustomerVO customer;
-
-	//Vom Typ DishVO
-	private DishVO[] shoppingBasket = new DishVO[MAX_DISHES];
+    private static final int MAX_DISHES = 10;
+    private static int nextOrderNo = 0;
+    private int orderNo;
+    private int index;
+    private LocalDateTime timestampStartedOrder;
+    private LocalDateTime timestampDeliveredOrder;
+    private PizzaVO[] shoppingBasket;
+    private CustomerVO customer; // darf nicht mehr  null sein nach der erzeugung
 
 
-	public OrderVO(int orderNo, String state, LocalDateTime timestampStartedOrder, CustomerVO customer) {
-		this.timestampStartedOrder = LocalDateTime.now();
-		this.customer = customer;
-		this.state = state;
-		this.orderNo = orderNo;
-	}
 
-	// Berechnet den Gesamtpreis aller Gerichte im Warenkorb
-	public float calculatePriceDishes() {
-		float total = 0;
-		for (int i = 0; i < index; i++) {
-			if (shoppingBasket[i] != null) {
-				total += shoppingBasket[i].getPrice();
-			}
-		}
-		return total;
-	}
+//Konstruktoren
+    public OrderVO() {
+        this(null, null);
+    }
+    public OrderVO(LocalDateTime timestampStartedOrder, CustomerVO customer) {
+        setCustomer(customer);
+        setTimestampStartedOrder(timestampStartedOrder);
+        shoppingBasket = new PizzaVO[MAX_DISHES];
+        index = 0;
 
-	// Verwaltungsmethoden für shoppingBasket
-	public void addDish(DishVO dish) {
-		if (index < MAX_DISHES) {
-			shoppingBasket[index++] = dish; // auch null erlaubt – Test prüft ja gerade diesen Fall
-		}
-	}
+        int currentYear = LocalDate.now().getYear();
+        int yearPart = currentYear;
+        int counterPart = nextOrderNo % 100000; // nur die letzten 5 Ziffern als Laufnummer
+        counterPart++; // erhöhe Zähler für diese Bestellung
 
-	public void deleteDish() {
-		if (index > 0) {
-			shoppingBasket[--index] = null;
-		} else if(index == 0){
-			shoppingBasket[0] = null;
-		}
-	}
-
-	public DishVO getDish(int index) {
-		if (index >= 0 && index < this.index) {
-			return shoppingBasket[index];
-		}
-		return null;
-	}
-
-	public int getNumberOfDishes() {
-		return index;
-	}
-
-	public String getState() {
-		return state;
-	}
-
-//ToString
-
-	@Override
-	public String toString() {
-		StringBuilder text = new StringBuilder();
-			text.append(String.format("OrderVO " + getOrderNo() + " from %1$tm/%1$td/%1$tY %1$tH:%1$tM With delivery at %1$tm/%1$td/%1$tY %2$tH:%2$tM\n", timestampStartedOrder, timestampDeliveredOrder));
-			text.append("of customer: ");
-			text.append(customer.getLastName()).append(" ");
-			text.append(customer.getFirstName()).append(", ID of customer: ").append(customer.getId()).append("\n");
+        nextOrderNo = yearPart * 100000 + counterPart; // sichere neuen Wert
+        orderNo = nextOrderNo;
+    }
 
 
-		if (shoppingBasket != null) {
-			for (int i = 0; i < index; i++) {
-				if (shoppingBasket[i] != null) {
-					text.append(shoppingBasket[i].toString()).append("\n");
-				}
-			}
-		}
-		return text.toString();
-	}
 
-	// equals und hashCode basierend auf orderNo
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (!(obj instanceof OrderVO)) return false;
-		OrderVO other = (OrderVO) obj;
-		return orderNo == other.orderNo;
-	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(orderNo);
-	}
 
-	// Getter & Setter
-	public void setState(String state) {
-			this.state = state;
-	}
+    public void addDish(PizzaVO dish) {
+        if (shoppingBasket != null && dish != null) {
+            if(index < MAX_DISHES) {
+                shoppingBasket[index] = dish;
+                index++;
+            }
+        }
+    }
+    public void deleteDish() {
+        if(shoppingBasket != null && index > 0) {
+            index--;
+            shoppingBasket[index] = null;
+        }
+    }
+    public PizzaVO getDish(int index) {
+        if(index < MAX_DISHES && index > -1) {
+            return shoppingBasket[index];
+        }
+        return null;
+    }
+    public int getNumberOfDishes() {
+        return index;
+    }
 
-	// Setter für timestampDeliveredOrder
-	public void setTimestampDeliveredOrder(LocalDateTime timestampDeliveredOrder) {
-		this.timestampDeliveredOrder = timestampDeliveredOrder;
-	}
 
-	// Getter für timestampDeliveredOrder
-	public LocalDateTime getTimestampDeliveredOrder() {
-		return this.timestampDeliveredOrder;
-	}
 
-	// Setter für shoppingBasket
-	public void setShoppingBasket(DishVO[] shoppingBasket) {
-		this.shoppingBasket = shoppingBasket;
-	}
+//Standartd Methoden
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("OrderVO ").append(orderNo).append(" from ");
+        sb.append(timestampStartedOrder);
+        sb.append(" with delivery at ").append(timestampDeliveredOrder);
+        sb.append(" of customer: ").append(customer.getFirstName()).append(" ").append(customer.getLastName());
+        sb.append(", Id of customer: ").append(customer.getId());
+        sb.append(" Ingredients [");
+        //Algoritmus um alle Pizzen im Warenkorb hintereinander aufzulisten
+        if(shoppingBasket != null) {
+            for(PizzaVO pizza : shoppingBasket) {
+                if(pizza != null) {
+                    sb.append(pizza.toString()).append(",");
+                }
+            }
+        }
+        sb.append("]");
+        return sb.toString();
+    }
+    public boolean equals(Object o) {
+        if (this == o) {return true;}
+        if(o == null || getClass() != o.getClass()) {return false;}
+        OrderVO that = (OrderVO) o;
+        return Objects.equals(orderNo, that.orderNo);
+    }
+    public int hashCode() {
+        return Objects.hash(orderNo);
+    }
 
-	public int getOrderNo() {
-		return orderNo;
-	}
 
-	public LocalDateTime getTimestampStartedOrder() {
-		return timestampStartedOrder;
-	}
 
-	public void setTimestampStartedOrder(LocalDateTime timestampStartedOrder) {
-		this.timestampStartedOrder = timestampStartedOrder;
-	}
+    //Nur Getter
+    public int getIndex() {return index;}
+    public int getOrderNo() {
+        return orderNo;
+    }
+    public static int getMAX_DISHES() {return MAX_DISHES;}
+    //Anzahl der Gerichte Getter ?!
 
-	public CustomerVO getCustomer() {
-		return customer;
-	}
+    //Getter und Setter
+    public static int getNextOrderNo() {return nextOrderNo;}
+    public LocalDateTime getTimestampStartedOrder() {return timestampStartedOrder;}
+    public LocalDateTime getTimestampDeliveredOrder() {return timestampDeliveredOrder;}
+    public PizzaVO[] getShoppingBasket() {return shoppingBasket;}
+    public CustomerVO getCustomer() {return customer;}
+    public void setTimestampStartedOrder(LocalDateTime timestampStartedOrder) {this.timestampStartedOrder = timestampStartedOrder;}
+    public void setTimestampDeliveredOrder(LocalDateTime DeliveredOrder) {this.timestampDeliveredOrder = DeliveredOrder;}
 
-	public void setCustomer(CustomerVO customer) {
-		this.customer = customer;
-	}
+    private void setCustomer(CustomerVO customer) {
+        this.customer = customer;
+    }
+    public void setShoppingBasket(PizzaVO[] shoppingBasket) {
+        this.shoppingBasket = shoppingBasket;
+    }
 
-	public DishVO[] getShoppingBasket() {
-		return shoppingBasket;
-	}
-
-	public int getIndex() {
-		return index;
-	}
-
-	public static int getMAX_DISHES() {
-		return MAX_DISHES;
-	}
-
-	public void setOrderNo(int orderNo) {
-		this.orderNo = orderNo;
-	}
-
-	public void setIndex(int index) {
-		this.index = index;
-	}
 }

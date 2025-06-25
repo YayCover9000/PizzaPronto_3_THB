@@ -219,7 +219,7 @@ public class CustomerPanel extends JPanel {
 		addPanel.add(year, c);
 		
 		yearTextField = new JTextField();
-//		yearTextField.setPreferredSize(new Dimension(60,20));
+	//	yearTextField.setPreferredSize(new Dimension(60,20));
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 1;
 		c.gridy = 9;
