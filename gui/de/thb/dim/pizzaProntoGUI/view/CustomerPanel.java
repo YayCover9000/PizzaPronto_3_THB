@@ -18,6 +18,8 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
+import de.thb.dim.pizzaPronto.valueObjects.Gender;
+
 @SuppressWarnings("serial")
 public class CustomerPanel extends JPanel {
 
@@ -43,7 +45,7 @@ public class CustomerPanel extends JPanel {
 	private JLabel year;
 	private JLabel streetLabel;
 	private JLabel houseNoLabel;
-	private JComboBox<String> genderComboBox;
+	private JComboBox<Gender> genderComboBox;
 	private JComboBox<Integer> dayComboBox;
 	private JComboBox<Integer> monthComboBox;
 	private DefaultButton addButton;
@@ -119,9 +121,8 @@ public class CustomerPanel extends JPanel {
 	private void addComponentsToHintPanel(JPanel hintPanel) {
 		hintPanel.setLayout(new GridBagLayout());
 		hintLabel = new JLabel("<html><p><strong><span style=\"font-size: 10px;\">Hinweis</span></strong></p>\n" + 
-				"<p><span style=\"font-size: 10px;\">Um einen neuen Angestaellten hinzuzufuegen, muss die gesamte " + 
-				"Vererbungshierarchie, welche in Uebung 4 eingefuehrt wurden, implementiert sein. " +
-				"Saemtliche setter und getter fuer die neuen Attribute muessen implementiert sein.</span></p></html>");
+				"<p><span style=\"font-size: 10px;\">Um die ComboBox für das Geschlecht zu nutzen, muss die neue Enumeration 'Gender' implementiert werden. " +
+				"Welche Auswahlmoeglichkeiten dem Nutzer dabei zur Verfuegung gestellt werden, kann durch die eigene Implementierung festgelegt werden.</span></p></html>");
 		
 		
 		GridBagConstraints c = new GridBagConstraints();
@@ -281,10 +282,10 @@ public class CustomerPanel extends JPanel {
 		c.insets = new Insets(0, 12, 5, 10);
 		addPanel.add(genderLabel, c);
 		
-		String[] genders = {"female", "male", "diverse"};
+//		String[] genders = {"female", "male", "diverse"};
 		
-		genderComboBox = new JComboBox<String>(genders);
-		genderComboBox.setEditable(true);
+		genderComboBox = new JComboBox<>(Gender.values());
+//		genderComboBox.setEditable(true);
 		c.gridx = 0;
 		c.gridy = 11;
 		c.gridwidth = 2;
@@ -534,11 +535,11 @@ public class CustomerPanel extends JPanel {
 		this.year = year;
 	}
 
-	public JComboBox<String> getGenderComboBox() {
+	public JComboBox<Gender> getGenderComboBox() {
 		return genderComboBox;
 	}
 
-	public void setGenderComboBox(JComboBox<String> genderComboBox) {
+	public void setGenderComboBox(JComboBox<Gender> genderComboBox) {
 		this.genderComboBox = genderComboBox;
 	}
 

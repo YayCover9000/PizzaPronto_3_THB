@@ -22,9 +22,9 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
-import de.thb.dim.pizzaPronto.ChefVO;
-import de.thb.dim.pizzaPronto.DeliveryManVO;
-import de.thb.dim.pizzaPronto.EmployeeVO;
+import de.thb.dim.pizzaPronto.valueObjects.ChefVO;
+import de.thb.dim.pizzaPronto.valueObjects.DeliveryManVO;
+import de.thb.dim.pizzaPronto.valueObjects.EmployeeVO;
 import de.thb.dim.pizzaProntoGUI.view.MainView;
 import de.thb.dim.pizzaProntoGUI.view.StaffPanel;
 

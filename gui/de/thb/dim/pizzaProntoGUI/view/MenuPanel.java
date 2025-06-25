@@ -1,7 +1,6 @@
 package de.thb.dim.pizzaProntoGUI.view;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -122,8 +121,8 @@ public class MenuPanel extends JPanel {
 	private void addComponentsToHintPanel(JPanel hintPanel) {
 		hintPanel.setLayout(new GridBagLayout());
 		hintLabel = new JLabel("<html><p><strong><span style=\"font-size: 10px;\">Hinweis</span></strong></p>\n" + 
-				"<p><span style=\"font-size: 10px;\">Es muessen zwingend alle Unterklassen von DishVO, sowie die MenuVO Klasse implementiert sein." +
-				" Die Gerichte werden danach automatisch aus der MenuVO geladen. Danach koennen weitere Gerichte von hinzugefuegt werden.</span></p></html>");
+				"<p><span style=\"font-size: 10px;\">In der Klasse MenuVO muss das Array dishes durch eine ArrayList ersetzt werden. " +
+				"Des Weiteren muessen die Methoden initMenu(), getDish(), getNumberOfDishes(), toString(), sowie der Konstruktor angepasst werden.</span></p></html>");
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 0;

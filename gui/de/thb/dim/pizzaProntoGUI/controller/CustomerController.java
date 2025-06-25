@@ -17,7 +17,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-import de.thb.dim.pizzaPronto.CustomerVO;
+import de.thb.dim.pizzaPronto.valueObjects.CustomerVO;
+import de.thb.dim.pizzaPronto.valueObjects.Gender;
 import de.thb.dim.pizzaProntoGUI.view.CustomerPanel;
 import de.thb.dim.pizzaProntoGUI.view.MainView;
 
@@ -39,7 +40,7 @@ public class CustomerController {
 				
 				String lastName = customerPanel.getLastNameTextField().getText();
 				String firstName = customerPanel.getFirstNameTextField().getText();
-				String gender = (String) customerPanel.getGenderComboBox().getSelectedItem();
+				Gender gender = (Gender) customerPanel.getGenderComboBox().getSelectedItem();
 				String street = customerPanel.getStreetTextField().getText();
 				
 				int houseNumber = 0;

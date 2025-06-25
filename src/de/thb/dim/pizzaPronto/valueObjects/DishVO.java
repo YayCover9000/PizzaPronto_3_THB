@@ -3,7 +3,7 @@ package de.thb.dim.pizzaPronto.valueObjects;
 import java.util.Arrays;
 import java.util.Objects;
 
-public abstract class DishVO implements Comparable<DishVO>, Cloneable {
+public abstract class DishVO implements Comparable<DishVO> {
     protected int number;
     protected String name;
     protected String[] ingredients;
@@ -32,17 +32,6 @@ public abstract class DishVO implements Comparable<DishVO>, Cloneable {
 
 
     // Standart Methoden
-
-    //Clone
-    public Object clone() {
-        Object o = null;
-        try{
-            o = super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new InternalError();
-        }
-        return o;
-    }
 
     public int hashCode() {
         return Objects.hash(number,name, Arrays.hashCode(ingredients),price);

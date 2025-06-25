@@ -18,11 +18,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-import de.thb.dim.pizzaPronto.DessertVO;
-import de.thb.dim.pizzaPronto.DishVO;
-import de.thb.dim.pizzaPronto.MenuVO;
-import de.thb.dim.pizzaPronto.PastaVO;
-import de.thb.dim.pizzaPronto.PizzaVO;
+import de.thb.dim.pizzaPronto.valueObjects.DessertVO;
+import de.thb.dim.pizzaPronto.valueObjects.DishVO;
+import de.thb.dim.pizzaPronto.valueObjects.MenuVO;
+import de.thb.dim.pizzaPronto.valueObjects.PastaVO;
+import de.thb.dim.pizzaPronto.valueObjects.PizzaVO;
 import de.thb.dim.pizzaProntoGUI.view.MainView;
 import de.thb.dim.pizzaProntoGUI.view.MenuPanel;
 

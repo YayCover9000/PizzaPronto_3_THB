@@ -31,10 +31,10 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
-import de.thb.dim.pizzaPronto.CustomerVO;
-import de.thb.dim.pizzaPronto.DishVO;
-import de.thb.dim.pizzaPronto.OrderVO;
-import de.thb.dim.pizzaPronto.Ordering;
+import de.thb.dim.pizzaPronto.businessObjects.Ordering;
+import de.thb.dim.pizzaPronto.valueObjects.CustomerVO;
+import de.thb.dim.pizzaPronto.valueObjects.DishVO;
+import de.thb.dim.pizzaPronto.valueObjects.OrderVO;
 import de.thb.dim.pizzaProntoGUI.view.CustomerPanel;
 import de.thb.dim.pizzaProntoGUI.view.DefaultButton;
 import de.thb.dim.pizzaProntoGUI.view.MainView;
@@ -85,6 +85,8 @@ public class OrderController {
 		JButton removeButton = orderPanel.getRemoveButton();
 		JButton printButton = orderPanel.getPrintButton();
 		JButton confirmButton = orderPanel.getConfirmButton();
+		
+		JComboBox sortComboBox = orderPanel.getSortComboBox();
 		
 
 
@@ -230,8 +232,47 @@ public class OrderController {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Ordering ordering = getSelectedOrder();
-				ordering.deleteDish();
+				
+				int[] idx = shoppingBasketTable.getSelectedRows();
+				
+				for(int i=0; i<idx.length ; i++ ) {
+
+					DishVO dish = (DishVO) shoppingBasketTableModel.getValueAt(idx[i], 1);
+					
+					ordering.deleteDish(dish);
+					
+				}
+				
 				updateShoppingBasket(ordering);
+			}
+			
+		});
+		
+		
+		sortComboBox.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				Ordering ordering = getSelectedOrder();
+				
+				OrderVO order = ordering.getCurrentOrder();
+				
+				switch(sortComboBox.getSelectedIndex()) {
+					case(1):
+						order.setShoppingBasket(ordering.sortShoppingBasket());
+						break;
+					case(2):
+						order.setShoppingBasket(ordering.sortShoppingBasketByNumber());
+						break;
+					case(3):
+						order.setShoppingBasket(ordering.sortShoppingBasketByPrice());
+						break;
+					default:
+						break;						
+				}
+				
+				updateShoppingBasket(ordering);				
 			}
 			
 		});
@@ -274,9 +315,18 @@ public class OrderController {
 						c1.weightx = 1;
 						c1.insets = new Insets(10, 12, 10, 10);
 						c1.anchor = GridBagConstraints.FIRST_LINE_START;
-						menuPanel.add(menuLabel, c1);										
+						menuPanel.add(menuLabel, c1);
+						
+						JTable table = new JTable(menuTableModel);
+						table.setDefaultEditor(Object.class, null);
+						table.setFont(new Font("Arial", Font.PLAIN, 14));
+						table.setRowHeight(30);
+						table.setShowGrid(false);
+						table.getTableHeader().setOpaque(false);
+						table.getTableHeader().setBackground(new Color(240, 240, 240));
+						table.setSelectionBackground(new Color(0x50c443));
 							
-						JScrollPane menuTableScrollPane = new JScrollPane(menuTable);
+						JScrollPane menuTableScrollPane = new JScrollPane(table);
 						menuTableScrollPane.setBorder(BorderFactory.createEmptyBorder());
 						menuTableScrollPane.getViewport().setBackground(Color.WHITE);
 						GridBagConstraints c2 = new GridBagConstraints();
@@ -308,45 +358,47 @@ public class OrderController {
 							@Override
 								public void actionPerformed(ActionEvent e) {
 								Ordering ordering = getSelectedOrder();
-									if(ordering == null) {
-										EventQueue.invokeLater(new Runnable(){
-										@Override
-										public void run(){
-											JFrame frame = new JFrame("Note");
-																
-											JPanel innerPanel = new JPanel(new GridBagLayout());
-											innerPanel.setOpaque(true);
-											innerPanel.setBackground(Color.WHITE);
-											innerPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-											
-											GridBagConstraints c0 = new GridBagConstraints();
-											
-											JLabel label = new JLabel("No started order.");
-											label.setFont(new Font("Arial", Font.PLAIN, 18));
-											label.setForeground(new Color(0x606060));
-
-											c0.insets = new Insets(20,20,20,20);
-											innerPanel.add(label, c0);
-											
-											JPanel outerPanel = new JPanel(new GridBagLayout());
-											outerPanel.setOpaque(true);
-											outerPanel.setBackground(new Color(0xeaeaea));
-											
-											GridBagConstraints c1 = new GridBagConstraints();
-											c1.insets = new Insets(20,20,20,20);
-											outerPanel.add(innerPanel,c1);
-											
-											frame.add(outerPanel);
-											
-											frame.setLocationRelativeTo(null);
-											frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-											frame.pack();
-											frame.setVisible(true);
-										}
+								
+								if(ordering == null) {
+									EventQueue.invokeLater(new Runnable(){
+									@Override
+									public void run(){
+										JFrame frame = new JFrame("Note");
+															
+										JPanel innerPanel = new JPanel(new GridBagLayout());
+										innerPanel.setOpaque(true);
+										innerPanel.setBackground(Color.WHITE);
+										innerPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
 										
+										GridBagConstraints c0 = new GridBagConstraints();
+										
+										JLabel label = new JLabel("No started order.");
+										label.setFont(new Font("Arial", Font.PLAIN, 18));
+										label.setForeground(new Color(0x606060));
+
+										c0.insets = new Insets(20,20,20,20);
+										innerPanel.add(label, c0);
+										
+										JPanel outerPanel = new JPanel(new GridBagLayout());
+										outerPanel.setOpaque(true);
+										outerPanel.setBackground(new Color(0xeaeaea));
+										
+										GridBagConstraints c1 = new GridBagConstraints();
+										c1.insets = new Insets(20,20,20,20);
+										outerPanel.add(innerPanel,c1);
+										
+										frame.add(outerPanel);
+										
+										frame.setLocationRelativeTo(null);
+										frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+										frame.pack();
+										frame.setVisible(true);
+									}
+									
 									});
-									}else {
-									int[] index = menuTable.getSelectedRows();
+								}else {
+										
+									int[] index = table.getSelectedRows();
 									for(int i=0; i<index.length ; i++ ) {
 										
 										DishVO dish = (DishVO)menuTableModel.getDataVector().get(index[i]).get(0);
@@ -356,9 +408,9 @@ public class OrderController {
 									updateShoppingBasket(ordering);			
 									
 								}
-							}		
+									
+							}
 						});
-
 						
 					}
 				
@@ -436,7 +488,7 @@ public class OrderController {
 		shoppingBasketTableModel.setRowCount(0);
 		for(int i = 0; i < order.getNumberOfDishes(); i++) {
 			Object[] row = new Object[2];
-			row[1] = order.getShoppingBasket()[i];
+			row[1] = order.getShoppingBasket().get(i);
 			
 			shoppingBasketTableModel.addRow(row);
 		}
@@ -454,11 +506,11 @@ public class OrderController {
 		orderPanel.getStartedLabelRight().setText(String.format("%1$tm/%1$td/%1$tY %1$tH:%1$tM", order.getTimestampStartedOrder()));
 		orderPanel.getIdLabelRight().setText(Integer.toString(customer.getId()));
 		orderPanel.getNameLabelRight().setText(customer.getFirstName() + " " + customer.getLastName());
-		orderPanel.getGenderLabelRight().setText(customer.getGender());
+		orderPanel.getGenderLabelRight().setText(customer.getGender().toString());
 		orderPanel.getDateOfBirthRight().setText(customer.getDateOfBirth().format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
-		orderPanel.getItemCountLabel().setText(Integer.toString(order.getIndex()));
+		orderPanel.getItemCountLabel().setText(Integer.toString(order.getNumberOfDishes()));
 		orderPanel.getStreetLabelRight().setText(customer.getStreet() + " " + customer.getHouseNumber());
-		orderPanel.getStateLabelRight().setText(order.getState());
+		orderPanel.getStateLabelRight().setText(order.getState().toString());
 
 	}
 	

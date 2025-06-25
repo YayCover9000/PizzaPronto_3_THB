@@ -2,7 +2,7 @@ package de.thb.dim.pizzaPronto.valueObjects;
 
 import java.util.Objects;
 
-public class PastaVO extends DishVO{
+public class PastaVO extends DishVO {
     private int typeOfPasta;
 
     public PastaVO() {this(0, null, null, 0.00f, 0);}
@@ -58,5 +58,4 @@ public class PastaVO extends DishVO{
     public int hashCode() {
         return Objects.hash(super.hashCode(), getTypeOfPasta());
     }
-
 }

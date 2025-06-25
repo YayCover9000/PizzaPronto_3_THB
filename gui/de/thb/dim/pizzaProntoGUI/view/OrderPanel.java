@@ -57,8 +57,10 @@ public class OrderPanel extends JPanel{
 	private JLabel stateLabelRight;
 	private JLabel statusLabel;
 	private JLabel serviceLabel;
+	private JLabel sortLabel;
 	
-	private JComboBox customerComboBox;
+	private JComboBox<Integer> customerComboBox;
+	private JComboBox<String> sortComboBox;
 	
 	private JTable currentOrderstable;
 	private JTable menuTable;
@@ -216,9 +218,9 @@ public class OrderPanel extends JPanel{
 	private void addComponentsToHintPanel(JPanel hintPanel) {
 		hintPanel.setLayout(new GridBagLayout());
 		hintLabel = new JLabel("<html><p><strong><span style=\"font-size: 10px;\">Hinweis</span></strong></p>\n" + 
-				"<p><span style=\"font-size: 10px;\">Um eine Bestellung aufzugeben, muessen die Interfaces IOrdering und IService, sowie die konkreten Klassen Ordering, Delivery und Kitchen vollständig implementiert sein. " +
-				"Danach kann ueber 'New Order' eine neue Bestellung angelegt werden. Mit 'Add Dish' koennen Gerichte hinzugefuegt werden. Mit 'Confirm Order' wird die Bestelltabwicklung gestartet. Die durch die Bestellabwicklung erzeugten Strings werden dann im Servicebereich angezeigt. "+
-				"Die fuer den Service zufaellig gewaehlten Angestellten, kommen direkt aus den Klassen Kitchen und Delivery und nicht aus dem GUI.</span></p></html>");
+				"<p><span style=\"font-size: 10px;\">In der Klasse OrderVO, muss die neue Liste implementiert werden und die Verwaltungsmethoden angepasst werden. " +
+				"Damit der Status richtig angezeigt wird, muss die neue Enumeration StateOfOrderVO implementiert sein. " +
+				"Um die Sortierfunktion zu nutzen, muessen die Methoden sortShoppingBasket(), sortShoppingBasketByNumber() und sortShoppingBasketByPrice() implementiert sein.</span></p></html>");
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 0;
@@ -255,7 +257,7 @@ public class OrderPanel extends JPanel{
 		c1.insets = new Insets(15, 12, 10, 5);
 		newPanel.add(selectLabel, c1);
 		
-		customerComboBox = new JComboBox<Integer>();
+		customerComboBox = new JComboBox<>();
 		GridBagConstraints c2 = new GridBagConstraints();
 		c2.gridx = 1;
 		c2.gridy = 1;
@@ -322,7 +324,7 @@ public class OrderPanel extends JPanel{
 	//	c12.fill = GridBagConstraints.HORIZONTAL;
 		c12.gridwidth = 1;
 		c12.anchor = GridBagConstraints.LAST_LINE_END;
-		c12.insets = new Insets(10, 12, 10, 10);
+		c12.insets = new Insets(10, 12, 10, 0);
 		shoppingBasketPanel.add(priceLabel, c12);
 		
 		totalPriceLabel = new JLabel("0,00 Euro");
@@ -339,6 +341,30 @@ public class OrderPanel extends JPanel{
 		c13.gridwidth = 2;
 		c13.insets = new Insets(10, 12, 10, 10);
 		shoppingBasketPanel.add(totalPriceLabel, c13);
+		
+		sortLabel = new JLabel("sort by:");
+		GridBagConstraints c8  = new GridBagConstraints();
+		c8.gridx = 1;
+		c8.gridy = 1;
+		c8.gridwidth = 4;
+		c8.anchor = GridBagConstraints.LAST_LINE_END;
+		c8.insets = new Insets(0, 0, 7, 0);
+		shoppingBasketPanel.add(sortLabel, c8);
+		
+		String[] sorts = {"none", "name", "number", "price"};
+		sortComboBox = new JComboBox<>(sorts);
+//		sortComboBox.setSelectedItem("sort");
+		GridBagConstraints c7 = new GridBagConstraints();
+		c7.gridx = 5;
+		c7.gridy = 1;
+		c7.gridwidth = 1;
+//		c7.weightx = 1;
+//		c7.fill = GridBagConstraints.HORIZONTAL;
+		c7.anchor = GridBagConstraints.LAST_LINE_END;
+		c7.fill = GridBagConstraints.HORIZONTAL;
+		c7.insets = new Insets(10, 5, 0, 5);
+		shoppingBasketPanel.add(sortComboBox, c7);
+
 
 		
 		shoppingBasketTable = new JTable();
@@ -347,13 +373,15 @@ public class OrderPanel extends JPanel{
 		shoppingBasketTableModel = new DefaultTableModel();
 		shoppingBasketTableModel.setColumnIdentifiers(columns);
 		shoppingBasketTable = new JTable(shoppingBasketTableModel);
-		shoppingBasketTable.setRowSelectionAllowed(false);
+	//	shoppingBasketTable.setRowSelectionAllowed(false);
 		shoppingBasketTable.setFocusable(false);
 		TableColumnModel tcm2 = shoppingBasketTable.getColumnModel();
 		tcm2.removeColumn(tcm2.getColumn(0));
 		shoppingBasketTable.setFont(new Font("Arial", Font.PLAIN, 14));
 		shoppingBasketTable.setRowHeight(30);
 		shoppingBasketTable.setShowGrid(false);
+		shoppingBasketTable.setSelectionBackground(new Color(0x50c443));
+		shoppingBasketTable.setDefaultEditor(Object.class, null);
 		shoppingBasketTable.getTableHeader().setOpaque(false);
 		shoppingBasketTable.getTableHeader().setBackground(new Color(240, 240, 240));	
 
@@ -867,6 +895,14 @@ public class OrderPanel extends JPanel{
 
 	public void setServiceTextArea(JTextArea serviceTextArea) {
 		this.serviceTextArea = serviceTextArea;
+	}
+
+	public JComboBox<String> getSortComboBox() {
+		return sortComboBox;
+	}
+
+	public void setSortComboBox(JComboBox<String> sortComboBox) {
+		this.sortComboBox = sortComboBox;
 	}
 	
 	
