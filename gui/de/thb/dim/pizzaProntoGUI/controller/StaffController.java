@@ -2,15 +2,24 @@ package de.thb.dim.pizzaProntoGUI.controller;
 
 // import de.thb.dim.pizzaPronto.valueObjects.ChefVO;
 import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 import de.thb.dim.pizzaPronto.ChefVO;
 import de.thb.dim.pizzaProntoGUI.view.MainView;
 import de.thb.dim.pizzaProntoGUI.view.StaffPanel;
-
 
 public class StaffController {
 	
@@ -36,16 +45,69 @@ public class StaffController {
 										 staffPanel.getFirstNameTextField().getText(),
 										 color);
 				
-				Object[] row = new Object[3];
-				row[0] = chef.getFirstName();
-				row[1] = chef.getLastName();				
-				color = chef.getColorApron();
-				row[2] = convertColorToString(color);
+				int rowCnt = staffPanel.getTableModel().getRowCount();
 				
-				staffPanel.getTableModel().addRow(row);
+				boolean isEqual = false;
 				
-				staffPanel.getFirstNameTextField().setText(null);
-				staffPanel.getLastNameTextField().setText(null);
+				for(int i = 0; i < rowCnt; i++) {
+					if (chef.equals(staffPanel.getTableModel().getValueAt(i, 4)))
+						isEqual = true;
+				}
+				
+				if(isEqual == true) {
+						EventQueue.invokeLater(new Runnable(){
+							
+							@Override
+							public void run(){
+								JFrame frame = new JFrame("Note");
+													
+								JPanel innerPanel = new JPanel(new GridBagLayout());
+								innerPanel.setOpaque(true);
+								innerPanel.setBackground(Color.WHITE);
+								innerPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+								
+								GridBagConstraints c0 = new GridBagConstraints();
+								
+								JLabel label = new JLabel("This person is already an employee.");
+								label.setFont(new Font("Arial", Font.PLAIN, 18));
+								label.setForeground(new Color(0x606060));
+
+								c0.insets = new Insets(20,20,20,20);
+								innerPanel.add(label, c0);
+								
+								JPanel outerPanel = new JPanel(new GridBagLayout());
+								outerPanel.setOpaque(true);
+								outerPanel.setBackground(new Color(0xeaeaea));
+								
+								GridBagConstraints c1 = new GridBagConstraints();
+								c1.insets = new Insets(20,20,20,20);
+								outerPanel.add(innerPanel,c1);
+								
+								frame.add(outerPanel);
+								
+								frame.setLocationRelativeTo(null);
+								frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+								frame.pack();
+								frame.setVisible(true);
+							}
+							
+						});
+					
+				} else {
+					Object[] row = new Object[5];
+					row[0] = chef.getFirstName();
+					row[1] = chef.getLastName();				
+					color = chef.getColorApron();
+					row[2] = convertColorToString(color);
+					row[3] = chef.hashCode();
+					row[4] = chef;
+									
+					staffPanel.getTableModel().addRow(row);
+					
+					staffPanel.getFirstNameTextField().setText(null);
+					staffPanel.getLastNameTextField().setText(null);
+				}
+				
 			}
 			
 		});
@@ -66,6 +128,75 @@ public class StaffController {
 			
 		});
 		
+		JButton printButton = staffPanel.getPrintButton();
+		printButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable(){
+					
+					@Override
+					public void run(){
+						JFrame frame = new JFrame("Print Details");
+						
+						int numRows = staffPanel.getTable().getSelectedRows().length;
+						
+						StringBuilder sb = new StringBuilder();
+						
+						int[] idx = staffPanel.getTable().getSelectedRows();
+						
+						for(int i=0; i<numRows ; i++ ) {
+
+							String s = staffPanel.getTableModel().getValueAt(idx[i], 4).toString();
+							sb.append(s);
+							sb.append("\n");
+						}
+											
+						JPanel innerPanel = new JPanel(new GridBagLayout());
+						innerPanel.setOpaque(true);
+						innerPanel.setBackground(Color.WHITE);
+						innerPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+						
+						GridBagConstraints c0 = new GridBagConstraints();
+						
+						JLabel label = new JLabel("Printed Employees:");
+						label.setFont(new Font("Arial", Font.PLAIN, 20));
+						label.setForeground(new Color(0x606060));
+						c0.gridx = 0;
+						c0.gridy = 0;
+						c0.insets = new Insets(20,20,10,20);
+						innerPanel.add(label, c0);
+						
+						JTextArea details = new JTextArea();						
+						details.setBackground(Color.WHITE);
+						details.setEditable(false);						
+						details.setText(sb.toString());
+						c0.gridx = 0;
+						c0.gridy = 1;
+						c0.insets = new Insets(10,20,20,20);
+						innerPanel.add(details, c0);
+						
+						JPanel outerPanel = new JPanel(new GridBagLayout());
+						outerPanel.setOpaque(true);
+						outerPanel.setBackground(new Color(0xeaeaea));
+						
+						GridBagConstraints c1 = new GridBagConstraints();
+						c1.insets = new Insets(20,20,20,20);
+						outerPanel.add(innerPanel,c1);
+						
+						frame.add(outerPanel);
+						
+						frame.setLocationRelativeTo(null);
+						frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+						frame.pack();
+						frame.setVisible(true);
+					}
+					
+				});
+				
+			}
+		});
+	
 	}
 	
 	static Color convertStringToColor(String name) {

@@ -55,7 +55,7 @@ public class LayoutPanel extends JPanel {
 		mainPanel.add(customerPanel, "customerPanel");
 		mainPanel.add(menuPanel, "menuPanel");
 		mainPanel.add(orderPanel, "orderPanel");
-		mainPanel.setPreferredSize(new Dimension(1170, 670));
+		mainPanel.setPreferredSize(new Dimension(1170, 700));
 		c.gridx = 1;
 		c.gridy = 1;
 		c.gridwidth = 1;

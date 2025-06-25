@@ -17,6 +17,12 @@ public class PizzaVO {
         setPrice(price);
     }
 
+    //clone
+    public PizzaVO clone() {
+        return new PizzaVO(name, Arrays.copyOf(ingredients, ingredients.length), price);
+    }
+
+
     @Override
     public String toString() {
         return name + " " + Arrays.toString(ingredients) + " " + price;
