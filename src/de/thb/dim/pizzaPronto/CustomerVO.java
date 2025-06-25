@@ -1,4 +1,7 @@
 package de.thb.dim.pizzaPronto;
+import de.thb.dim.pizzaPronto.OrderVO;
+import de.thb.dim.pizzaPronto.PersonVO;
+
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -10,7 +13,7 @@ import java.util.Objects;
  * @version 4.0
  *
  */
-public class CustomerVO  extends PersonVO{
+public class CustomerVO  extends PersonVO {
 	
 	private static int nextId = 0;
 	private int id;
@@ -27,7 +30,8 @@ public class CustomerVO  extends PersonVO{
 	 * @param lastName - Customer's second name
 	 * @param firstName - Customer's first name
 	 * @param gender - Customer's gender
-     *
+	 * @param dateOfBirth - Customer's date of birth
+	 * 
 	 */
 	public CustomerVO(String lastName, String firstName, String street, int houseNumber, String gender, LocalDate dob) {
 		super(lastName, firstName, street, houseNumber);
@@ -44,7 +48,8 @@ public class CustomerVO  extends PersonVO{
 	 * 
 	 * @param lastName - Customer's second name
 	 * @param firstName - Customer's first name
-     *
+	 * @param dateOfBirth - Customer's date of birth
+	 * 
 	 */
 	public CustomerVO(String lastName, String firstName, LocalDate dob) {
 		this(lastName, firstName, null, 0, null, dob);
@@ -192,8 +197,10 @@ public class CustomerVO  extends PersonVO{
 
 	/**
 	 * older than 17 years else dateOfBirth is set null
-	 *
-     */
+	 * 
+	 * @param dateOfBirth
+	 *        -     java.time.LocalDate
+	 */
 	public void setDateOfBirth(LocalDate dob) {
 		this.dateOfBirth = dob;
 		if (this.calculateAge() < 18)

@@ -38,8 +38,8 @@ public class GUI_Main {
 				
 				StaffController staffController = new StaffController(view);
 				CustomerController customerController = new CustomerController(view);
-				MenuController menuController = new MenuController(view);
 				OrderController orderController = new OrderController(view);
+				MenuController menuController = new MenuController(view);
 			}
 		});
 

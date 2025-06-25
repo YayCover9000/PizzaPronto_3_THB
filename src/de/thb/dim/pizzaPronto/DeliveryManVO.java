@@ -21,14 +21,10 @@ public class DeliveryManVO extends EmployeeVO  {
 	
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
-		
 		sb.append("\nDelivery Man:\n" );
-		
 		sb.append(super.toString());
-		
-		
+		sb.append("\nDriver Licence: " + driverLicence + "\n");
 		return sb.toString();
-		
 	}
 
 

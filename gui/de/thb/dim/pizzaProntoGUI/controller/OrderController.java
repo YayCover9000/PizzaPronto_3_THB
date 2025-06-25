@@ -10,7 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -28,11 +27,10 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
 
 import de.thb.dim.pizzaPronto.CustomerVO;
+import de.thb.dim.pizzaPronto.DishVO;
 import de.thb.dim.pizzaPronto.OrderVO;
-import de.thb.dim.pizzaPronto.PizzaVO;
 import de.thb.dim.pizzaProntoGUI.view.CustomerPanel;
 import de.thb.dim.pizzaProntoGUI.view.MainView;
 import de.thb.dim.pizzaProntoGUI.view.MenuPanel;
@@ -51,6 +49,7 @@ public class OrderController {
 	private DefaultTableModel orderTableModel;
 	
 	private JLabel itemCountLabel;
+	private JLabel totalPriceLabel;
 
 	public OrderController(MainView view) {
 		
@@ -85,7 +84,9 @@ public class OrderController {
 		JLabel dateOfBirthRight = orderPanel.getDateOfBirthRight();
 		JLabel startedLabelRight = orderPanel.getStartedLabelRight();
 		JLabel streetLabelRight = orderPanel.getStreetLabelRight();
+		JLabel stateLabelRight = orderPanel.getStateLabelRight();
 		itemCountLabel = orderPanel.getItemCountLabel();
+		totalPriceLabel = orderPanel.getTotalPriceLabel();
 
 		
 		@SuppressWarnings("unchecked")
@@ -127,6 +128,7 @@ public class OrderController {
 					dateOfBirthRight.setText(order.getCustomer().getDateOfBirth().format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
 					itemCountLabel.setText(Integer.toString(order.getIndex()));
 					streetLabelRight.setText(order.getCustomer().getStreet() + " " + order.getCustomer().getHouseNumber());
+					stateLabelRight.setText(order.getState());
 					
 					orderTable.setRowSelectionInterval(orderTable.getRowCount()-1, orderTable.getRowCount()-1);
 				}
@@ -149,6 +151,7 @@ public class OrderController {
 				dateOfBirthRight.setText(order.getCustomer().getDateOfBirth().format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
 				itemCountLabel.setText(Integer.toString(order.getNumberOfDishes()));
 				streetLabelRight.setText(order.getCustomer().getStreet() + " " + order.getCustomer().getHouseNumber());
+				stateLabelRight.setText(order.getState());
 				
 				updateShoppingBasket();
 			}
@@ -183,10 +186,8 @@ public class OrderController {
 				for(int i = 0;i < rowCount; i++) {
 						Object[] row = new Object[6];
 					
-						row[0] = menuTableModel.getValueAt(i, 5);
+						row[0] = menuTableModel.getValueAt(i, 0);
 						row[1] = menuTableModel.getValueAt(i, 0);
-						row[2] = menuTableModel.getValueAt(i, 1);
-						row[3] = menuTableModel.getValueAt(i, 3);
 						
 						orderMenuTableModel.addRow(row);											
 				}
@@ -203,7 +204,7 @@ public class OrderController {
 				int[] index = orderMenuTable.getSelectedRows();
 				for(int i=0; i<index.length ; i++ ) {
 					
-					PizzaVO dish = (PizzaVO)orderMenuTableModel.getDataVector().get(index[i]).get(0);
+					DishVO dish = (DishVO)orderMenuTableModel.getDataVector().get(index[i]).get(0);
 
 					order.addDish(dish);					
 				}
@@ -294,12 +295,12 @@ public class OrderController {
 		shoppingBasketTableModel.setRowCount(0);
 		for(int i = 0; i < order.getNumberOfDishes(); i++) {
 			Object[] row = new Object[3];
-			row[1] = order.getShoppingBasket()[i].getName();
-			row[2] = order.getShoppingBasket()[i].getPrice();
+			row[1] = order.getShoppingBasket()[i];
 			
 			shoppingBasketTableModel.addRow(row);
 		}
 		itemCountLabel.setText(Integer.toString(order.getNumberOfDishes()));
+		totalPriceLabel.setText(String.valueOf(order.calculatePriceDishes()) + " €");
 
 	}
 	

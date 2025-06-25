@@ -120,7 +120,7 @@ public class CustomerPanel extends JPanel {
 		hintPanel.setLayout(new GridBagLayout());
 		hintLabel = new JLabel("<html><p><strong><span style=\"font-size: 10px;\">Hinweis</span></strong></p>\n" + 
 				"<p><span style=\"font-size: 10px;\">Um einen neuen Angestaellten hinzuzufuegen, muss die gesamte " + 
-				"Vererbungshierarchie, welche in Uebung 4 eingefuehrt wurde, implementiert sein. " +
+				"Vererbungshierarchie, welche in Uebung 4 eingefuehrt wurden, implementiert sein. " +
 				"Saemtliche setter und getter fuer die neuen Attribute muessen implementiert sein.</span></p></html>");
 		
 		

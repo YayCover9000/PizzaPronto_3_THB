@@ -12,11 +12,16 @@ import java.util.Arrays;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
+import de.thb.dim.pizzaPronto.DessertVO;
+import de.thb.dim.pizzaPronto.DishVO;
+import de.thb.dim.pizzaPronto.MenuVO;
+import de.thb.dim.pizzaPronto.PastaVO;
 import de.thb.dim.pizzaPronto.PizzaVO;
 import de.thb.dim.pizzaProntoGUI.view.MainView;
 import de.thb.dim.pizzaProntoGUI.view.MenuPanel;
@@ -24,12 +29,15 @@ import de.thb.dim.pizzaProntoGUI.view.MenuPanel;
 public class MenuController {
 	
 	private MainView view;
+	private MenuPanel menuPanel;
 
 	public MenuController(MainView view) {
 		
 	setView(view);
 		
-	MenuPanel menuPanel = view.getLayoutPanel().getMenuPanel();
+	menuPanel = view.getLayoutPanel().getMenuPanel();
+	
+	loadMenu();
 		
 		JButton addButton = menuPanel.getAddButton();
 		addButton.addActionListener(new ActionListener() {
@@ -38,10 +46,16 @@ public class MenuController {
 			public void actionPerformed(ActionEvent e) {
 				
 				int ingredientCount = menuPanel.getIngredientTableModel().getRowCount();
+				int number = Integer.parseInt(menuPanel.getNumberTextField().getText());
+				int typeOfPasta = (int) menuPanel.getTypeComboBox().getSelectedItem();
+				int size = (int) menuPanel.getSizeComboBox().getSelectedItem();
+				float priceAsFloat = 0.0F;
 				String name = menuPanel.getNameTextField().getText();
 				String[] ingredients = new String [ingredientCount];				
 				String priceAsString = menuPanel.getPriceTextField().getText().replace(',', '.');
-				float priceAsFloat = 0.0F;
+				String typeOfDish = (String) menuPanel.getDishComboBox().getSelectedItem();
+				
+
 				
 				if (!priceAsString.equals("")) {
 					try {
@@ -55,14 +69,21 @@ public class MenuController {
 					ingredients[i] = (String) menuPanel.getIngredientTableModel().getValueAt(i, 0);
 				}
 				
-				PizzaVO pizza = new PizzaVO(name, ingredients, priceAsFloat);
+				DishVO dish = null;
+				
+				if(typeOfDish.equals("Pasta"))
+					dish = new PastaVO(number, name, ingredients, priceAsFloat, typeOfPasta);
+				else if(typeOfDish.equals("Pizza"))
+					dish = new PizzaVO(number, name, ingredients, priceAsFloat, size);
+				else if(typeOfDish.equals("Dessert"))
+					dish = new DessertVO(number, name, priceAsFloat);
 				
 				int rowCnt = menuPanel.getTableModel().getRowCount();
 				
 				boolean isEqual = false;
 				
 				for(int i = 0; i < rowCnt; i++) {
-					if (pizza.equals(menuPanel.getTableModel().getValueAt(i, 5)))
+					if (dish.equals(menuPanel.getTableModel().getValueAt(i, 5)))
 						isEqual = true;
 				}
 				
@@ -106,14 +127,21 @@ public class MenuController {
 						});
 					
 				} else {
-					Object[] row = new Object[6];
+					Object[] row = new Object[9];
 					
-					row[0] = menuPanel.getDishComboBox().getSelectedItem();
-					row[1] = pizza.getName();
-					row[2] = Arrays.toString(pizza.getIngredients());
-					row[3] = pizza.getPrice();
-					row[4] = pizza.hashCode();
-					row[5] = pizza;
+					row[0] = dish;
+					row[1] = dish.getNumberOfDish();
+					row[2] = dish.getClass().getSimpleName();
+					row[3] = dish.getName();
+					if(dish instanceof PizzaVO || dish instanceof PastaVO)
+						row[4] = Arrays.toString(dish.getIngredients());
+					if(dish instanceof PizzaVO)
+						row[5] = ((PizzaVO) dish).getSize();
+					if(dish instanceof PastaVO)
+						row[6] = ((PastaVO) dish).getTypeOfPasta();
+					row[7] = dish.getPrice();
+					row[8] = dish.hashCode();
+
 					
 					menuPanel.getTableModel().addRow(row);
 					
@@ -194,7 +222,7 @@ public class MenuController {
 						
 						for(int i=0; i<numRows ; i++ ) {
 
-							String s = menuPanel.getTableModel().getValueAt(idx[i], 5).toString();
+							String s = menuPanel.getTableModel().getValueAt(idx[i], 0).toString();
 							sb.append(s);
 							sb.append("\n");
 						}
@@ -244,35 +272,105 @@ public class MenuController {
 			}
 		});
 		
-		JButton copyButton = menuPanel.getCopyButton();
-		copyButton.addActionListener(new ActionListener() {
+//		JButton copyButton = menuPanel.getCopyButton();
+//		copyButton.addActionListener(new ActionListener() {
+//
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				int numRows = menuPanel.getTable().getSelectedRows().length;
+//				for(int i=0; i<numRows ; i++ ) {
+//
+//					int[] idx = menuPanel.getTable().getSelectedRows();
+//					
+//					DishVO org = (DishVO) menuPanel.getTableModel().getValueAt(idx[i], 5);
+//					DishVO cpy = (DishVO) org.clone();
+//					
+//					Object[] row = new Object[6];
+//					
+//					row[0] = "Pizza";
+//					row[1] = cpy.getName();
+//					row[2] = Arrays.toString(cpy.getIngredients());
+//					row[3] = cpy.getPrice();
+//					row[4] = cpy.hashCode();
+//					row[5] = cpy;
+//					
+//					menuPanel.getTableModel().addRow(row);
+//				}
+//				
+//			}
+//			
+//		});
+		
+		JComboBox<String> dishComboBox = menuPanel.getDishComboBox();
+		dishComboBox.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int numRows = menuPanel.getTable().getSelectedRows().length;
-				for(int i=0; i<numRows ; i++ ) {
+				String typeOfDish = (String) menuPanel.getDishComboBox().getSelectedItem();
+				
+				if(typeOfDish.equals("Pasta")) {
+					menuPanel.getTypeComboBox().setEnabled(true);
+					menuPanel.getSizeComboBox().setEnabled(false);
+					menuPanel.getIngredientTextField().setEnabled(true);
+					menuPanel.getIngredientsTable().setEnabled(true);
+					menuPanel.getAddIngredientButton().setVisible(true);
+					menuPanel.getRemoveIngredientButton().setVisible(true);
 
-					int[] idx = menuPanel.getTable().getSelectedRows();
 					
-					PizzaVO org = (PizzaVO) menuPanel.getTableModel().getValueAt(idx[i], 5);
-					PizzaVO cpy = org.clone();
+				} else if(typeOfDish.equals("Pizza")) {
+					menuPanel.getSizeComboBox().setEnabled(true);
+					menuPanel.getTypeComboBox().setEnabled(false);
+					menuPanel.getIngredientTextField().setEnabled(true);
+					menuPanel.getIngredientsTable().setEnabled(true);
+					menuPanel.getAddIngredientButton().setEnabled(true);
+					menuPanel.getRemoveIngredientButton().setEnabled(true);
+
 					
-					Object[] row = new Object[6];
+				} else if(typeOfDish.equals("Dessert")) {
+					menuPanel.getSizeComboBox().setEnabled(false);
+					menuPanel.getTypeComboBox().setEnabled(false);
+					menuPanel.getIngredientTextField().setEnabled(false);
+					menuPanel.getIngredientsTable().setEnabled(false);
+					menuPanel.getAddIngredientButton().setEnabled(false);
+					menuPanel.getRemoveIngredientButton().setEnabled(false);
 					
-					row[0] = "Pizza";
-					row[1] = cpy.getName();
-					row[2] = Arrays.toString(cpy.getIngredients());
-					row[3] = cpy.getPrice();
-					row[4] = cpy.hashCode();
-					row[5] = cpy;
-					
-					menuPanel.getTableModel().addRow(row);
 				}
+					
 				
 			}
 			
 		});
 		
+		
+	}
+	
+	private void loadMenu() {
+		MenuVO menu = new MenuVO();
+		
+		int length = menu.getNumberOfDishes();
+		
+		for(int i = 0; i < length; i++) {
+			
+			DishVO dish = menu.getDish(i);
+			
+			Object[] row = new Object[9];
+			
+			row[0] = dish;
+			row[1] = dish.getNumberOfDish();
+			row[2] = dish.getClass().getSimpleName();
+			row[3] = dish.getName();
+			if(dish instanceof PizzaVO || dish instanceof PastaVO)
+				row[4] = Arrays.toString(dish.getIngredients());
+			if(dish instanceof PizzaVO)
+				row[5] = ((PizzaVO) dish).getSize();
+			if(dish instanceof PastaVO)
+				row[6] = ((PastaVO) dish).getTypeOfPasta();
+			row[7] = dish.getPrice();
+			row[8] = dish.hashCode();
+
+			
+			menuPanel.getTableModel().addRow(row);
+		}
 	}
 	
 	public void setView(MainView view) {
