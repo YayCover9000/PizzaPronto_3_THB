@@ -97,8 +97,11 @@ public class OrderVO {
 	}
 
 	// Getter & Setter
-	public void setState(StateOfOrderVO state) {
-			this.state = state;
+	public void setState(StateOfOrderVO state) throws IllegalArgumentException {
+			if (state == null) {
+				throw new IllegalArgumentException("state cannot be null");
+		}
+		this.state = state;
 	}
 
 	// Setter für timestampDeliveredOrder
@@ -133,9 +136,6 @@ public class OrderVO {
 
 	public void setOrderNo(int orderNo) {
 		this.orderNo = orderNo;
-	}
-	public void setState(String state) {
-		this.state = StateOfOrderVO.valueOf(state);
 	}
 
 	public List<DishVO> getShoppingBasket() {

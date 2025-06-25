@@ -1,5 +1,6 @@
 package de.thb.dim.pizzaProntoGUI.view;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -12,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -24,6 +26,9 @@ public class OrderPanel extends JPanel{
 	private JPanel currentOrdersPanel;
 	private JPanel editOrderPanel;
 	private JPanel menuPanel;
+	private JPanel shoppingBasketPanel;
+	private JPanel statusPanel;
+	private JPanel servicePanel;
 	
 	private JLabel headerLabelSmall;
 	private JLabel headerLabelLarge;
@@ -32,7 +37,6 @@ public class OrderPanel extends JPanel{
 	private JLabel selectLabel;
 	private JLabel currentOrdersLabel;
 	private JLabel editOrdersLabel;
-
 	private JLabel numberLabelRight;
 	private JLabel idLabelLeft;
 	private JLabel idLabelRight;
@@ -47,9 +51,16 @@ public class OrderPanel extends JPanel{
 	private JLabel menuLabel;
 	private JLabel itemCountLabel;
 	private JLabel streetLabelLeft;
-	private JLabel streetLabelRight;
+	private JLabel streetLabelRight;	
+	private JLabel totalPriceLabel;
+	private JLabel stateLabelLeft;
+	private JLabel stateLabelRight;
+	private JLabel statusLabel;
+	private JLabel serviceLabel;
+	private JLabel sortLabel;
 	
-	private JComboBox customerComboBox;
+	private JComboBox<Integer> customerComboBox;
+	private JComboBox<String> sortComboBox;
 	
 	private JTable currentOrderstable;
 	private JTable menuTable;
@@ -65,6 +76,10 @@ public class OrderPanel extends JPanel{
 	private DefaultButton addButton;
 	private DefaultButton removeButton;
 	private DefaultButton printButton;
+	private DefaultButton addDishButton;
+	private DefaultButton confirmButton;
+	
+	private JTextArea serviceTextArea;
 
 	public OrderPanel() {
 
@@ -97,7 +112,7 @@ public class OrderPanel extends JPanel{
 		c1.gridheight = 1;
 		c1.weightx = 0;
 		c1.weighty = 0;
-		c1.fill = GridBagConstraints.HORIZONTAL;
+		c1.fill = GridBagConstraints.BOTH;
 		c1.insets = new Insets(10, 30, 10, 10);
 		add(newOrderPanel, c1);
 		
@@ -109,7 +124,7 @@ public class OrderPanel extends JPanel{
 		c3.gridx = 0;
 		c3.gridy = 2;
 		c3.gridwidth = 1;
-		c3.gridheight = 1;
+		c3.gridheight = 2;
 		c3.weightx = 0;
 		c3.weighty = 1;
 		c3.fill = GridBagConstraints.BOTH;
@@ -119,7 +134,10 @@ public class OrderPanel extends JPanel{
 		editOrderPanel = new JPanel();
 		editOrderPanel.setBackground(Color.WHITE);
 		editOrderPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-		addComponentsToEditOrderPanel(editOrderPanel);
+		editOrderPanel.setPreferredSize(new Dimension(350,0));
+		editOrderPanel.setMaximumSize(new Dimension(350,0));
+		editOrderPanel.setMinimumSize(new Dimension(350,0));
+		addComponentsToDetailsPanel(editOrderPanel);
 		GridBagConstraints c4 = new GridBagConstraints();
 		c4.gridx = 1;
 		c4.gridy = 1;
@@ -131,20 +149,35 @@ public class OrderPanel extends JPanel{
 		c4.insets = new Insets(10, 0, 10, 10);
 		add(editOrderPanel, c4);
 		
-		menuPanel = new JPanel();
-		menuPanel.setBackground(Color.WHITE);
-		menuPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-		addComponentsToMenuPanel(menuPanel);
+		shoppingBasketPanel = new JPanel();
+		shoppingBasketPanel.setBackground(Color.WHITE);
+		shoppingBasketPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+		addComponentsToShoppingBasketPanel(shoppingBasketPanel);
 		GridBagConstraints c5 = new GridBagConstraints();
 		c5.gridx = 2;
 		c5.gridy = 1;
 		c5.gridwidth = 1;
-		c5.gridheight = 2;
+		c5.gridheight = 3;
 		c5.weightx = 1;
 		c5.weighty = 1;
 		c5.fill = GridBagConstraints.BOTH;
 		c5.insets = new Insets(10, 0, 10, 10);
-		add(menuPanel, c5);
+		add(shoppingBasketPanel, c5);
+		
+		servicePanel = new JPanel();
+		servicePanel.setBackground(Color.WHITE);
+		servicePanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+		addComponentsToServicePanel(servicePanel);
+		GridBagConstraints c6 = new GridBagConstraints();
+		c6.gridx = 1;
+		c6.gridy = 3;
+		c6.gridwidth = 1;
+		c6.gridheight = 1;
+		c6.weightx = 1;
+		c6.weighty = 1;
+		c6.fill = GridBagConstraints.BOTH;
+		c6.insets = new Insets(0, 0, 10, 10);
+		add(servicePanel, c6);
 		
 		hintPanel = new JPanel();
 		hintPanel.setBackground(Color.WHITE);
@@ -152,7 +185,7 @@ public class OrderPanel extends JPanel{
 		addComponentsToHintPanel(hintPanel);
 		GridBagConstraints c2 = new GridBagConstraints();
 		c2.gridx = 0;
-		c2.gridy = 3;
+		c2.gridy = 4;
 		c2.gridheight = 1;
 		c2.gridwidth = 3;
 		c2.weightx = 1;
@@ -185,11 +218,9 @@ public class OrderPanel extends JPanel{
 	private void addComponentsToHintPanel(JPanel hintPanel) {
 		hintPanel.setLayout(new GridBagLayout());
 		hintLabel = new JLabel("<html><p><strong><span style=\"font-size: 10px;\">Hinweis</span></strong></p>\n" + 
-				"<p><span style=\"font-size: 10px;\">Um eine neue Bestellung anzulegen, muss der Initialisierungskonstruktor der "
-				+ "Klasse OrderVO implementiert sein. Um die Funktionalitaet des Warenkorbs zu gewaehrleisten, muss der shoppingBasket im "
-				+ "Konstruktor initialisiert werden. Um die Anzahl der Artikel im Warenkorb anzuzeigen, muss die Methode getNumberOfDishes() "
-				+ "implementiert sein. Um einen Artikel zum Warenkorb hinzuzufuegen bzw. zu entfernen, muessen die Verwaltungsmethoden addDish() "
-				+ "und deleteDish() implementiert sein. Um die gesamte Bestellung auszugeben, muss die toString-Methode implementiert sein.</span></p></html>");
+				"<p><span style=\"font-size: 10px;\">Ueber die Buttons 'New Order', 'Add Dish', 'Delete Dish', 'Confirm Order' und ueber die Sortierauswahl koennen " +
+				"die Exceptions NoOrderException und IllegalStateException, je nach Kombination aus Status und Vorhandensein einer Bestellung, " +
+				"ausgegeben werden. Die NoCustomerException laesst sich ueber das GUI nicht ausgeben.</span></p></html>");
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 0;
@@ -203,6 +234,10 @@ public class OrderPanel extends JPanel{
 	private void addComponentsToNewOrderPanel(JPanel addPanel) {
 		addPanel.setLayout(new GridBagLayout());
 		
+		JPanel newPanel = new JPanel(new GridBagLayout());
+		newPanel.setBackground(Color.WHITE);
+		addPanel.add(newPanel);
+		
 		numberLabelLeft = new JLabel("Place an Order");
 		numberLabelLeft.setFont(new Font("Arial", Font.PLAIN, 24));
 		numberLabelLeft.setForeground(Color.DARK_GRAY);
@@ -213,21 +248,21 @@ public class OrderPanel extends JPanel{
 		c0.weightx = 0;
 		c0.insets = new Insets(10, 12, 0, 10);
 		c0.anchor = GridBagConstraints.FIRST_LINE_START;
-		addPanel.add(numberLabelLeft, c0);
+		newPanel.add(numberLabelLeft, c0);
 		
 		selectLabel = new JLabel("Select Customer ID:");
 		GridBagConstraints c1 = new GridBagConstraints();
 		c1.gridx = 0;
 		c1.gridy = 1;
 		c1.insets = new Insets(15, 12, 10, 5);
-		addPanel.add(selectLabel, c1);
+		newPanel.add(selectLabel, c1);
 		
-		customerComboBox = new JComboBox<Integer>();
+		customerComboBox = new JComboBox<>();
 		GridBagConstraints c2 = new GridBagConstraints();
 		c2.gridx = 1;
 		c2.gridy = 1;
 		c2.insets = new Insets(15, 0, 10, 10);
-		addPanel.add(customerComboBox, c2);
+		newPanel.add(customerComboBox, c2);
 		
 		startButton = new DefaultButton("New Order");
 		GridBagConstraints c3 = new GridBagConstraints();
@@ -237,60 +272,12 @@ public class OrderPanel extends JPanel{
 		c3.anchor = GridBagConstraints.LAST_LINE_END;
 		c3.fill = GridBagConstraints.HORIZONTAL;
 		c3.insets = new Insets(0, 12, 10, 10);
-		addPanel.add(startButton, c3);
-	}
-	
-	private void addComponentsToMenuPanel(JPanel menuPanel) {
-		menuPanel.setLayout(new GridBagLayout());
-		
-		menuLabel = new JLabel("Menu");
-		menuLabel.setFont(new Font("Arial", Font.PLAIN, 24));
-		menuLabel.setForeground(Color.DARK_GRAY);
-		GridBagConstraints c0 = new GridBagConstraints();
-		c0.gridx = 0;
-		c0.gridy = 0;
-		c0.weightx = 1;
-		c0.insets = new Insets(10, 12, 10, 10);
-		c0.anchor = GridBagConstraints.FIRST_LINE_START;
-		menuPanel.add(menuLabel, c0);
-						
-		String[] columns = {"Object", "Type", "Name", "Price"};
-		menuTableModel = new DefaultTableModel();
-		menuTableModel.setColumnIdentifiers(columns);
-		menuTable = new JTable(menuTableModel);
-		menuTable.setDefaultEditor(Object.class, null);
-		TableColumnModel tcm = menuTable.getColumnModel();
-		tcm.removeColumn(tcm.getColumn(0));
-		menuTable.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuTable.setRowHeight(30);
-		menuTable.setShowGrid(false);
-		menuTable.getTableHeader().setOpaque(false);
-		menuTable.getTableHeader().setBackground(new Color(240, 240, 240));
-		menuTable.setSelectionBackground(new Color(0x50c443));
-		
-		menuTableScrollPane = new JScrollPane(menuTable);
-		menuTableScrollPane.setBorder(BorderFactory.createEmptyBorder());
-		menuTableScrollPane.getViewport().setBackground(Color.WHITE);
-		GridBagConstraints c1 = new GridBagConstraints();
-		c1.gridx = 0;
-		c1.gridy = 1;
-		c1.weightx = 1;
-		c1.weighty = 1;
-		c1.fill = GridBagConstraints.BOTH;
-		c1.insets = new Insets(10, 10, 10, 10);
-		menuPanel.add(menuTableScrollPane, c1);
-		
-		addButton = new DefaultButton("Add Dish to Order");
-		GridBagConstraints c2 = new GridBagConstraints();
-		c2.gridx = 0;
-		c2.gridy = 2;
-		c2.anchor = GridBagConstraints.LAST_LINE_END;
-		c2.insets = new Insets(10, 10, 10, 10);
-		menuPanel.add(addButton, c2);
-		
+		newPanel.add(startButton, c3);
+				
 	}
 
 	private void addComponentsToShoppingBasketPanel(JPanel shoppingBasketPanel) {
+		shoppingBasketPanel.setLayout(new GridBagLayout());
 		
 		JLabel shoppingBasketLabel = new JLabel("Shopping Basket");
 		shoppingBasketLabel.setFont(new Font("Arial", Font.PLAIN, 24));
@@ -298,49 +285,103 @@ public class OrderPanel extends JPanel{
 		GridBagConstraints c0 = new GridBagConstraints();
 		c0.gridx = 0;
 		c0.gridy = 0;
-//		c0.weightx = 1;
+		c0.weightx = 1;
 		c0.fill = GridBagConstraints.HORIZONTAL;
 		c0.anchor = GridBagConstraints.FIRST_LINE_START;
 		c0.insets = new Insets(10, 12, 10, 10);
 		shoppingBasketPanel.add(shoppingBasketLabel, c0);
 		
 		JLabel itemLabel = new JLabel("Items: ");
-		itemLabel.setFont(new Font("Arial", Font.PLAIN, 24));
-		itemLabel.setForeground(Color.DARK_GRAY);
+//		itemLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+//		itemLabel.setForeground(Color.DARK_GRAY);
 		GridBagConstraints c3 = new GridBagConstraints();
-		c3.gridx = 2;
+		c3.gridx = 1;
 		c3.gridy = 0;
 //		c3.weightx = 1;
-		c3.fill = GridBagConstraints.HORIZONTAL;
+//		c3.fill = GridBagConstraints.HORIZONTAL;
 		c3.anchor = GridBagConstraints.LAST_LINE_END;
 		c3.insets = new Insets(10, 12, 10, 10);
 		shoppingBasketPanel.add(itemLabel, c3);
 		
 		itemCountLabel = new JLabel("0");
-		itemCountLabel.setFont(new Font("Arial", Font.PLAIN, 24));
-		itemCountLabel.setForeground(Color.DARK_GRAY);
+//		itemCountLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+//		itemCountLabel.setForeground(Color.DARK_GRAY);
 		GridBagConstraints c4 = new GridBagConstraints();
-		c4.fill = GridBagConstraints.HORIZONTAL;
+//		c4.fill = GridBagConstraints.HORIZONTAL;
 		c4.anchor = GridBagConstraints.LAST_LINE_END;
-		c4.gridx = 3;
+		c4.gridx = 2;
 		c4.gridy = 0;
 		c4.insets = new Insets(10, 12, 10, 10);
 		shoppingBasketPanel.add(itemCountLabel, c4);
+		
+		JLabel priceLabel = new JLabel("Total Price: ");
+//		priceLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+//		priceLabel.setForeground(Color.DARK_GRAY);
+		GridBagConstraints c12 = new GridBagConstraints();
+		c12.gridx = 3;
+		c12.gridy = 0;
+//		c3.weightx = 1;
+	//	c12.fill = GridBagConstraints.HORIZONTAL;
+		c12.gridwidth = 1;
+		c12.anchor = GridBagConstraints.LAST_LINE_END;
+		c12.insets = new Insets(10, 12, 10, 0);
+		shoppingBasketPanel.add(priceLabel, c12);
+		
+		totalPriceLabel = new JLabel("0,00 Euro");
+//		totalPriceLabel.setMinimumSize(new Dimension(50,0));
+//		totalPriceLabel.setMaximumSize(new Dimension(50,0));
+//		totalPriceLabel.setPreferredSize(new Dimension(50,0));
+//		totalPriceLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+//		totalPriceLabel.setForeground(Color.DARK_GRAY);
+		GridBagConstraints c13 = new GridBagConstraints();
+	//	c13.fill = GridBagConstraints.HORIZONTAL;
+		c13.anchor = GridBagConstraints.LAST_LINE_END;
+		c13.gridx = 4;
+		c13.gridy = 0;
+		c13.gridwidth = 2;
+		c13.insets = new Insets(10, 12, 10, 10);
+		shoppingBasketPanel.add(totalPriceLabel, c13);
+		
+		sortLabel = new JLabel("sort by:");
+		GridBagConstraints c8  = new GridBagConstraints();
+		c8.gridx = 1;
+		c8.gridy = 1;
+		c8.gridwidth = 4;
+		c8.anchor = GridBagConstraints.LAST_LINE_END;
+		c8.insets = new Insets(0, 0, 7, 0);
+		shoppingBasketPanel.add(sortLabel, c8);
+		
+		String[] sorts = {"none", "name", "number", "price"};
+		sortComboBox = new JComboBox<>(sorts);
+//		sortComboBox.setSelectedItem("sort");
+		GridBagConstraints c7 = new GridBagConstraints();
+		c7.gridx = 5;
+		c7.gridy = 1;
+		c7.gridwidth = 1;
+//		c7.weightx = 1;
+//		c7.fill = GridBagConstraints.HORIZONTAL;
+		c7.anchor = GridBagConstraints.LAST_LINE_END;
+		c7.fill = GridBagConstraints.HORIZONTAL;
+		c7.insets = new Insets(10, 5, 0, 5);
+		shoppingBasketPanel.add(sortComboBox, c7);
+
 
 		
 		shoppingBasketTable = new JTable();
 		DefaultTableModel shoppingBasketTableModel = new DefaultTableModel();
-		String[] columns = {"Object", "Name", "Price"};
+		String[] columns = {"Object", "Name"};
 		shoppingBasketTableModel = new DefaultTableModel();
 		shoppingBasketTableModel.setColumnIdentifiers(columns);
 		shoppingBasketTable = new JTable(shoppingBasketTableModel);
-		shoppingBasketTable.setRowSelectionAllowed(false);
+	//	shoppingBasketTable.setRowSelectionAllowed(false);
 		shoppingBasketTable.setFocusable(false);
 		TableColumnModel tcm2 = shoppingBasketTable.getColumnModel();
 		tcm2.removeColumn(tcm2.getColumn(0));
 		shoppingBasketTable.setFont(new Font("Arial", Font.PLAIN, 14));
 		shoppingBasketTable.setRowHeight(30);
 		shoppingBasketTable.setShowGrid(false);
+		shoppingBasketTable.setSelectionBackground(new Color(0x50c443));
+		shoppingBasketTable.setDefaultEditor(Object.class, null);
 		shoppingBasketTable.getTableHeader().setOpaque(false);
 		shoppingBasketTable.getTableHeader().setBackground(new Color(240, 240, 240));	
 
@@ -350,43 +391,48 @@ public class OrderPanel extends JPanel{
 		shoppingBasketScrollPane.getViewport().setBackground(Color.WHITE);
 		GridBagConstraints c2 = new GridBagConstraints();
 		c2.gridx = 0;
-		c2.gridy = 1;
-		c2.weightx = 0;
+		c2.gridy = 2;
+		c2.weightx = 1;
 		c2.weighty = 1;
-		c2.gridwidth = 4;
+		c2.gridwidth = 6;
 		c2.fill = GridBagConstraints.BOTH;
 		c2.insets = new Insets(10, 10, 10, 10);
 		shoppingBasketPanel.add(shoppingBasketScrollPane, c2);
 		
-		printButton = new DefaultButton("Print Order");
+		addDishButton = new DefaultButton("Add Dish");
 		GridBagConstraints c5 = new GridBagConstraints();
-		c5.gridx = 1;
-		c5.gridy = 2;
+		c5.gridx = 2;
+		c5.gridy = 3;
+		c5.gridwidth = 2;
 		c5.anchor = GridBagConstraints.LAST_LINE_END;
-		c5.insets = new Insets(10, 10, 10, 0);
-		shoppingBasketPanel.add(printButton, c5);
+		c5.insets = new Insets(10, 10, 10, 10);
+		shoppingBasketPanel.add(addDishButton, c5);
 		
 		removeButton = new DefaultButton("Remove Dish");
 		GridBagConstraints c6 = new GridBagConstraints();
-		c6.gridx = 2;
-		c6.gridy = 2;
+		c6.gridx = 4;
+		c6.gridy = 3;
 		c6.gridwidth = 2;
 		c6.anchor = GridBagConstraints.LAST_LINE_END;
-		c6.insets = new Insets(10, 10, 10, 10);
+		c6.insets = new Insets(10, 0, 10, 10);
 		shoppingBasketPanel.add(removeButton, c6);
 		
 	}
 
 	private void addComponentsToDetailsPanel(JPanel detailsPanel) {
+		
+		detailsPanel.setLayout(new GridBagLayout());
+		
 		numberLabelLeft = new JLabel("Order No. ");
 		numberLabelLeft.setFont(new Font("Arial", Font.PLAIN, 24));
 		numberLabelLeft.setForeground(Color.DARK_GRAY);
 		GridBagConstraints c0 = new GridBagConstraints();
 		c0.gridx = 0;
 		c0.gridy = 0;
+//		c0.weightx = 1;
 		c0.insets = new Insets(10, 12, 0, 0);
 		c0.anchor = GridBagConstraints.FIRST_LINE_START;
-		c0.fill = GridBagConstraints.HORIZONTAL;
+//		c0.fill = GridBagConstraints.HORIZONTAL;
 		detailsPanel.add(numberLabelLeft, c0);
 		
 		numberLabelRight = new JLabel();
@@ -400,23 +446,34 @@ public class OrderPanel extends JPanel{
 		c1.anchor = GridBagConstraints.FIRST_LINE_START;
 		detailsPanel.add(numberLabelRight, c1);
 		
+		stateLabelLeft = new JLabel("Status: ");
+		GridBagConstraints c14 = new GridBagConstraints();
+		c14.gridx = 0;
+		c14.gridy = 1;
+		c14.insets = new Insets(10, 12, 0, 10);
+		c14.anchor = GridBagConstraints.FIRST_LINE_START;
+		detailsPanel.add(stateLabelLeft, c14);
+		
+		stateLabelRight = new JLabel();
+		GridBagConstraints c15 = new GridBagConstraints();
+		c15.gridx = 1;
+		c15.gridy = 1;
+		c15.insets = new Insets(10, 0, 0, 10);
+		c15.anchor = GridBagConstraints.FIRST_LINE_START;
+		detailsPanel.add(stateLabelRight, c15);
+		
 		startedLabelLeft = new JLabel("Date: ");
-//		startedLabelLeft.setFont(new Font("Arial", Font.PLAIN, 12));
-//		startedLabelLeft.setForeground(Color.DARK_GRAY);
 		GridBagConstraints c10 = new GridBagConstraints();
 		c10.gridx = 0;
-		c10.gridy = 1;
+		c10.gridy = 2;
 		c10.insets = new Insets(10, 12, 0, 10);
 		c10.anchor = GridBagConstraints.FIRST_LINE_START;
 		detailsPanel.add(startedLabelLeft, c10);
 		
 		startedLabelRight = new JLabel();
-//		startedLabelRight.setFont(new Font("Arial", Font.PLAIN, 24));
-//		startedLabelRight.setForeground(Color.DARK_GRAY);
 		GridBagConstraints c11 = new GridBagConstraints();
 		c11.gridx = 1;
-		c11.gridy = 1;
-//		c11.weightx = 1;
+		c11.gridy = 2;
 		c11.insets = new Insets(10, 0, 0, 10);
 		c11.anchor = GridBagConstraints.FIRST_LINE_START;
 		detailsPanel.add(startedLabelRight, c11);
@@ -426,7 +483,7 @@ public class OrderPanel extends JPanel{
 //		idLabelLeft.setForeground(Color.DARK_GRAY);
 		GridBagConstraints c2 = new GridBagConstraints();
 		c2.gridx = 0;
-		c2.gridy = 2;
+		c2.gridy = 3;
 		c2.insets = new Insets(10, 12, 0, 10);
 		c2.anchor = GridBagConstraints.FIRST_LINE_START;
 		detailsPanel.add(idLabelLeft, c2);
@@ -436,7 +493,7 @@ public class OrderPanel extends JPanel{
 //		idLabelRight.setForeground(Color.DARK_GRAY);
 		GridBagConstraints c3 = new GridBagConstraints();
 		c3.gridx = 1;
-		c3.gridy = 2;
+		c3.gridy = 3;
 		c3.insets = new Insets(10, 0, 0, 10);
 		c3.anchor = GridBagConstraints.FIRST_LINE_START;
 		detailsPanel.add(idLabelRight, c3);
@@ -446,7 +503,7 @@ public class OrderPanel extends JPanel{
 //		nameLabelLeft.setForeground(Color.DARK_GRAY);
 		GridBagConstraints c4 = new GridBagConstraints();
 		c4.gridx = 0;
-		c4.gridy = 3;
+		c4.gridy = 4;
 		c4.insets = new Insets(10, 12, 0, 10);
 		c4.anchor = GridBagConstraints.FIRST_LINE_START;
 		detailsPanel.add(nameLabelLeft, c4);
@@ -456,7 +513,7 @@ public class OrderPanel extends JPanel{
 //		nameLabelRight.setForeground(Color.DARK_GRAY);
 		GridBagConstraints c5 = new GridBagConstraints();
 		c5.gridx = 1;
-		c5.gridy = 3;
+		c5.gridy = 4;
 		c5.insets = new Insets(10, 0, 0, 10);
 		c5.anchor = GridBagConstraints.FIRST_LINE_START;
 		detailsPanel.add(nameLabelRight, c5);
@@ -464,7 +521,7 @@ public class OrderPanel extends JPanel{
 		streetLabelLeft = new JLabel("Street: ");
 		GridBagConstraints c12 = new GridBagConstraints();
 		c12.gridx = 0;
-		c12.gridy = 4;
+		c12.gridy = 5;
 		c12.insets = new Insets(10, 12, 0, 10);
 		c12.anchor = GridBagConstraints.FIRST_LINE_START;
 		detailsPanel.add(streetLabelLeft, c12);
@@ -472,7 +529,7 @@ public class OrderPanel extends JPanel{
 		streetLabelRight = new JLabel();
 		GridBagConstraints c13 = new GridBagConstraints();
 		c13.gridx = 1;
-		c13.gridy = 4;
+		c13.gridy = 5;
 		c13.insets = new Insets(10, 0, 0, 10);
 		c13.anchor = GridBagConstraints.FIRST_LINE_START;
 		detailsPanel.add(streetLabelRight, c13);
@@ -483,7 +540,7 @@ public class OrderPanel extends JPanel{
 //		dateOfBirthLeft.setForeground(Color.DARK_GRAY);
 		GridBagConstraints c6 = new GridBagConstraints();
 		c6.gridx = 0;
-		c6.gridy = 5;
+		c6.gridy = 6;
 		c6.insets = new Insets(10, 12, 0, 10);
 		c6.anchor = GridBagConstraints.FIRST_LINE_START;
 		detailsPanel.add(dateOfBirthLeft, c6);
@@ -493,7 +550,7 @@ public class OrderPanel extends JPanel{
 //		dateOfBirthRight.setForeground(Color.DARK_GRAY);
 		GridBagConstraints c7 = new GridBagConstraints();
 		c7.gridx = 1;
-		c7.gridy = 5;
+		c7.gridy = 6;
 		c7.insets = new Insets(10, 0, 0, 10);
 		c7.anchor = GridBagConstraints.FIRST_LINE_START;
 		detailsPanel.add(dateOfBirthRight, c7);
@@ -503,7 +560,7 @@ public class OrderPanel extends JPanel{
 //		genderLabelLeft.setForeground(Color.DARK_GRAY);
 		GridBagConstraints c8 = new GridBagConstraints();
 		c8.gridx = 0;
-		c8.gridy = 6;
+		c8.gridy = 7;
 		c8.insets = new Insets(10, 12, 0, 10);
 		c8.anchor = GridBagConstraints.FIRST_LINE_START;
 		detailsPanel.add(genderLabelLeft, c8);
@@ -513,11 +570,19 @@ public class OrderPanel extends JPanel{
 //		genderLabelRight.setForeground(Color.DARK_GRAY);
 		GridBagConstraints c9 = new GridBagConstraints();
 		c9.gridx = 1;
-		c9.gridy = 6;
+		c9.gridy = 7;
+		c9.weighty = 1;
 		c9.insets = new Insets(10, 0, 0, 10);
 		c9.anchor = GridBagConstraints.FIRST_LINE_START;
 		detailsPanel.add(genderLabelRight, c9);
-
+		
+		printButton = new DefaultButton("Print Order");
+		GridBagConstraints c16 = new GridBagConstraints();
+		c16.gridx = 1;
+		c16.gridy = 8;
+		c16.anchor = GridBagConstraints.LAST_LINE_END;
+		c16.insets = new Insets(10, 10, 10, 10);
+		detailsPanel.add(printButton, c16);
 		
 	}
 
@@ -561,31 +626,89 @@ public class OrderPanel extends JPanel{
 		currentOrdersPanel.add(tableScrollPane, c1);
 	}
 	
-	private void addComponentsToEditOrderPanel(JPanel editOrdersPanel) {
-		editOrderPanel.setLayout(new GridBagLayout());
+//	private void addComponentsToEditOrderPanel(JPanel editOrdersPanel) {
+//		editOrderPanel.setLayout(new GridBagLayout());
+//		
+//		JPanel detailsPanel = new JPanel(new GridBagLayout());
+//		detailsPanel.setBackground(Color.WHITE);
+//		addComponentsToDetailsPanel(detailsPanel);
+//		GridBagConstraints c0 = new GridBagConstraints();
+//		c0.gridx = 0;
+//		c0.gridy = 0;
+//		c0.gridwidth = 1;
+//		c0.weightx = 1;
+//		c0.weighty = 1;
+//		c0.fill = GridBagConstraints.BOTH;
+//		c0.insets = new Insets(0, 0, 15, 0);
+//		editOrderPanel.add(detailsPanel, c0);
 		
-		JPanel detailsPanel = new JPanel(new GridBagLayout());
-		detailsPanel.setBackground(Color.WHITE);
-		addComponentsToDetailsPanel(detailsPanel);
+//		JPanel shoppingBasketPanel = new JPanel(new GridBagLayout());
+//		shoppingBasketPanel.setBackground(Color.WHITE);
+//		addComponentsToShoppingBasketPanel(shoppingBasketPanel);
+//		GridBagConstraints c1 = new GridBagConstraints();
+//		c1.gridx = 1;
+//		c1.gridy = 0;
+//		c1.gridwidth = 1;
+//		c1.weighty = 1;
+//		c1.weightx = 1;
+//		c1.fill = GridBagConstraints.BOTH;
+//		editOrderPanel.add(shoppingBasketPanel, c1);	
+//	}
+	
+	public void addComponentsToStatusPanel(JPanel statusPanel) {
+		statusPanel.setLayout(new GridBagLayout());
+		
+		statusLabel = new JLabel("Status:");
+		statusLabel.setFont(new Font("Arial", Font.PLAIN, 24));
+		statusLabel.setForeground(Color.DARK_GRAY);
 		GridBagConstraints c0 = new GridBagConstraints();
 		c0.gridx = 0;
 		c0.gridy = 0;
-		c0.gridwidth = 1;
 		c0.weightx = 1;
-		c0.fill = GridBagConstraints.HORIZONTAL;
-		c0.insets = new Insets(0, 0, 15, 0);
-		editOrderPanel.add(detailsPanel, c0);
+		c0.insets = new Insets(10, 12, 0, 10);
+		c0.anchor = GridBagConstraints.FIRST_LINE_START;
+		statusPanel.add(statusLabel, c0);
+	}
+	
+	public void addComponentsToServicePanel(JPanel servicePanel) {
+		servicePanel.setLayout(new GridBagLayout());
+
+		serviceLabel = new JLabel("Service");
+		serviceLabel.setFont(new Font("Arial", Font.PLAIN, 24));
+		serviceLabel.setForeground(Color.DARK_GRAY);
+		GridBagConstraints c0 = new GridBagConstraints();
+		c0.gridx = 0;
+		c0.gridy = 0;
+		c0.insets = new Insets(10, 12, 10, 10);
+		c0.anchor = GridBagConstraints.FIRST_LINE_START;
+		servicePanel.add(serviceLabel, c0);
 		
-		JPanel shoppingBasketPanel = new JPanel(new GridBagLayout());
-		shoppingBasketPanel.setBackground(Color.WHITE);
-		addComponentsToShoppingBasketPanel(shoppingBasketPanel);
+		serviceTextArea = new JTextArea();
+		serviceTextArea.setBorder(null);
+		serviceTextArea.setFont(new Font("Arial", Font.PLAIN, 12));
+		serviceTextArea.setLineWrap(true);
+		serviceTextArea.setWrapStyleWord(true);
+
+		
+		JScrollPane textAreaScrollPane = new JScrollPane(serviceTextArea);
+		textAreaScrollPane.setBorder(null);
 		GridBagConstraints c1 = new GridBagConstraints();
 		c1.gridx = 0;
 		c1.gridy = 1;
-		c1.gridwidth = 1;
+		c1.weightx = 1;
 		c1.weighty = 1;
 		c1.fill = GridBagConstraints.BOTH;
-		editOrderPanel.add(shoppingBasketPanel, c1);	
+		c1.insets = new Insets(0,10,0,10);
+		servicePanel.add(textAreaScrollPane, c1);
+		
+		confirmButton = new DefaultButton("Confirm Order");
+		GridBagConstraints c2 = new GridBagConstraints();
+		c2.gridx = 0;
+		c2.gridy = 2;
+		c2.weightx = 1;
+		c2.anchor = GridBagConstraints.LAST_LINE_END;
+		c2.insets = new Insets(10, 10, 10, 10);
+		servicePanel.add(confirmButton, c2);		
 	}
 
 
@@ -732,6 +855,54 @@ public class OrderPanel extends JPanel{
 
 	public void setStreetLabelRight(JLabel streetLabelRight) {
 		this.streetLabelRight = streetLabelRight;
+	}
+
+	public JLabel getTotalPriceLabel() {
+		return totalPriceLabel;
+	}
+
+	public void setTotalPriceLabel(JLabel totalPriceLabel) {
+		this.totalPriceLabel = totalPriceLabel;
+	}
+
+	public JLabel getStateLabelRight() {
+		return stateLabelRight;
+	}
+
+	public void setStateLabelRight(JLabel stateLabelRight) {
+		this.stateLabelRight = stateLabelRight;
+	}
+
+	public DefaultButton getAddDishButton() {
+		return addDishButton;
+	}
+
+	public void setAddDishButton(DefaultButton addDishButton) {
+		this.addDishButton = addDishButton;
+	}
+
+	public DefaultButton getConfirmButton() {
+		return confirmButton;
+	}
+
+	public void setConfirmButton(DefaultButton confirmButton) {
+		this.confirmButton = confirmButton;
+	}
+
+	public JTextArea getServiceTextArea() {
+		return serviceTextArea;
+	}
+
+	public void setServiceTextArea(JTextArea serviceTextArea) {
+		this.serviceTextArea = serviceTextArea;
+	}
+
+	public JComboBox<String> getSortComboBox() {
+		return sortComboBox;
+	}
+
+	public void setSortComboBox(JComboBox<String> sortComboBox) {
+		this.sortComboBox = sortComboBox;
 	}
 	
 	

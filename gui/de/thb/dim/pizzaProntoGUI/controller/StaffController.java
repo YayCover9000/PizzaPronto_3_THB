@@ -22,9 +22,9 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
-import de.thb.dim.pizzaPronto.ChefVO;
-import de.thb.dim.pizzaPronto.DeliveryManVO;
-import de.thb.dim.pizzaPronto.EmployeeVO;
+import de.thb.dim.pizzaPronto.valueObjects.ChefVO;
+import de.thb.dim.pizzaPronto.valueObjects.DeliveryManVO;
+import de.thb.dim.pizzaPronto.valueObjects.EmployeeVO;
 import de.thb.dim.pizzaProntoGUI.view.MainView;
 import de.thb.dim.pizzaProntoGUI.view.StaffPanel;
 
@@ -234,7 +234,7 @@ public class StaffController {
 			public void tableChanged(TableModelEvent e) {
 				int index = staffTable.getSelectedRow();
 				
-				if(index != -1 && e.getType() != e.DELETE) {
+				if(index != -1 && e.getType() != -1) { // e.getType() != -1 bei remove nicht ausführen
 										
 					EmployeeVO employee = (EmployeeVO) staffTableModel.getValueAt(index, 0);
 					
