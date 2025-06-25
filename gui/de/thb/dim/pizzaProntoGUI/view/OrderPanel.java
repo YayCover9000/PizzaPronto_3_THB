@@ -46,6 +46,8 @@ public class OrderPanel extends JPanel{
 	private JLabel startedLabelRight;
 	private JLabel menuLabel;
 	private JLabel itemCountLabel;
+	private JLabel streetLabelLeft;
+	private JLabel streetLabelRight;
 	
 	private JComboBox customerComboBox;
 	
@@ -184,9 +186,9 @@ public class OrderPanel extends JPanel{
 		hintPanel.setLayout(new GridBagLayout());
 		hintLabel = new JLabel("<html><p><strong><span style=\"font-size: 10px;\">Hinweis</span></strong></p>\n" + 
 				"<p><span style=\"font-size: 10px;\">Um eine neue Bestellung anzulegen, muss der Initialisierungskonstruktor der "
-				+ "Klasse OrderVO implementiert sein. Um die Funktionalität des Warenkorbs zu gewährleisten, muss der shoppingBasket im "
+				+ "Klasse OrderVO implementiert sein. Um die Funktionalitaet des Warenkorbs zu gewaehrleisten, muss der shoppingBasket im "
 				+ "Konstruktor initialisiert werden. Um die Anzahl der Artikel im Warenkorb anzuzeigen, muss die Methode getNumberOfDishes() "
-				+ "implementiert sein. Um einen Artikel zum Warenkorb hinzuzufügen bzw. zu entfernen, müssen die Verwaltungsmethoden addDish() "
+				+ "implementiert sein. Um einen Artikel zum Warenkorb hinzuzufuegen bzw. zu entfernen, muessen die Verwaltungsmethoden addDish() "
 				+ "und deleteDish() implementiert sein. Um die gesamte Bestellung auszugeben, muss die toString-Methode implementiert sein.</span></p></html>");
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
@@ -458,13 +460,30 @@ public class OrderPanel extends JPanel{
 		c5.insets = new Insets(10, 0, 0, 10);
 		c5.anchor = GridBagConstraints.FIRST_LINE_START;
 		detailsPanel.add(nameLabelRight, c5);
+//______________________		
+		streetLabelLeft = new JLabel("Street: ");
+		GridBagConstraints c12 = new GridBagConstraints();
+		c12.gridx = 0;
+		c12.gridy = 4;
+		c12.insets = new Insets(10, 12, 0, 10);
+		c12.anchor = GridBagConstraints.FIRST_LINE_START;
+		detailsPanel.add(streetLabelLeft, c12);
+		
+		streetLabelRight = new JLabel();
+		GridBagConstraints c13 = new GridBagConstraints();
+		c13.gridx = 1;
+		c13.gridy = 4;
+		c13.insets = new Insets(10, 0, 0, 10);
+		c13.anchor = GridBagConstraints.FIRST_LINE_START;
+		detailsPanel.add(streetLabelRight, c13);
+
 		
 		dateOfBirthLeft = new JLabel("Date of Birth: ");
 //		dateOfBirthLeft.setFont(new Font("Arial", Font.PLAIN, 24));
 //		dateOfBirthLeft.setForeground(Color.DARK_GRAY);
 		GridBagConstraints c6 = new GridBagConstraints();
 		c6.gridx = 0;
-		c6.gridy = 4;
+		c6.gridy = 5;
 		c6.insets = new Insets(10, 12, 0, 10);
 		c6.anchor = GridBagConstraints.FIRST_LINE_START;
 		detailsPanel.add(dateOfBirthLeft, c6);
@@ -474,7 +493,7 @@ public class OrderPanel extends JPanel{
 //		dateOfBirthRight.setForeground(Color.DARK_GRAY);
 		GridBagConstraints c7 = new GridBagConstraints();
 		c7.gridx = 1;
-		c7.gridy = 4;
+		c7.gridy = 5;
 		c7.insets = new Insets(10, 0, 0, 10);
 		c7.anchor = GridBagConstraints.FIRST_LINE_START;
 		detailsPanel.add(dateOfBirthRight, c7);
@@ -484,7 +503,7 @@ public class OrderPanel extends JPanel{
 //		genderLabelLeft.setForeground(Color.DARK_GRAY);
 		GridBagConstraints c8 = new GridBagConstraints();
 		c8.gridx = 0;
-		c8.gridy = 5;
+		c8.gridy = 6;
 		c8.insets = new Insets(10, 12, 0, 10);
 		c8.anchor = GridBagConstraints.FIRST_LINE_START;
 		detailsPanel.add(genderLabelLeft, c8);
@@ -494,7 +513,7 @@ public class OrderPanel extends JPanel{
 //		genderLabelRight.setForeground(Color.DARK_GRAY);
 		GridBagConstraints c9 = new GridBagConstraints();
 		c9.gridx = 1;
-		c9.gridy = 5;
+		c9.gridy = 6;
 		c9.insets = new Insets(10, 0, 0, 10);
 		c9.anchor = GridBagConstraints.FIRST_LINE_START;
 		detailsPanel.add(genderLabelRight, c9);
@@ -697,6 +716,22 @@ public class OrderPanel extends JPanel{
 
 	public void setShoppingBasketTable(JTable shoppingBasketTable) {
 		this.shoppingBasketTable = shoppingBasketTable;
+	}
+
+	public JLabel getStreetLabelLeft() {
+		return streetLabelLeft;
+	}
+
+	public void setStreetLabelLeft(JLabel streetLabelLeft) {
+		this.streetLabelLeft = streetLabelLeft;
+	}
+
+	public JLabel getStreetLabelRight() {
+		return streetLabelRight;
+	}
+
+	public void setStreetLabelRight(JLabel streetLabelRight) {
+		this.streetLabelRight = streetLabelRight;
 	}
 	
 	

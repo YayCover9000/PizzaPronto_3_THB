@@ -9,16 +9,12 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
-import java.util.Vector;
 
 import javax.swing.BorderFactory;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTable;
 import javax.swing.JTextArea;
 
 import de.thb.dim.pizzaPronto.CustomerVO;
@@ -44,6 +40,16 @@ public class CustomerController {
 				String lastName = customerPanel.getLastNameTextField().getText();
 				String firstName = customerPanel.getFirstNameTextField().getText();
 				String gender = (String) customerPanel.getGenderComboBox().getSelectedItem();
+				String street = customerPanel.getStreetTextField().getText();
+				
+				int houseNumber = 0;
+				
+				try {
+					houseNumber = Integer.parseInt(customerPanel.getHouseNoTextField().getText());
+				} catch (NumberFormatException exception) {
+					System.err.println("House number must be an integer." + exception.getMessage() );
+				}	
+				
 				
 				int day = (int) customerPanel.getDayComboBox().getSelectedItem();
 				int month = (int) customerPanel.getMonthComboBox().getSelectedItem();
@@ -55,14 +61,14 @@ public class CustomerController {
 				
 				LocalDate dob = LocalDate.of(yearAsInt, month, day);
 				
-				CustomerVO customer = new CustomerVO(lastName, firstName, gender, dob);
+				CustomerVO customer = new CustomerVO(lastName, firstName, street, houseNumber, gender, dob);
 				
 				int rowCnt = customerPanel.getTableModel().getRowCount();
 				
 				boolean isEqual = false;
 				
 				for(int i = 0; i < rowCnt; i++) {
-					if (customer.equals(customerPanel.getTableModel().getValueAt(i, 6)))
+					if (customer.equals(customerPanel.getTableModel().getValueAt(i, 0)))
 						isEqual = true;
 				}
 				
@@ -106,19 +112,21 @@ public class CustomerController {
 						});
 					
 				} else {
-					Object[] row = new Object[8];
+					Object[] row = new Object[9];
 					
-					row[0] = customer.getId();
-					row[1] = customer.getFirstName();
-					row[2] = customer.getLastName();
-					row[3] = customer.getGender();
+					row[0] = customer;
+					row[1] = customer.getId();
+					row[2] = customer.getFirstName();
+					row[3] = customer.getLastName();
+					row[4] = customer.getStreet();
+					row[5] = customer.getHouseNumber();
+					row[6] = customer.getGender();
 					
 					if(customer.getDateOfBirth() != null) {
-						row[4] = customer.calculateAge();
+						row[7] = customer.calculateAge();
 					}
 					
-					row[5] = customer.hashCode();
-					row[6] = customer;
+					row[8] = customer.hashCode();
 						
 					customerPanel.getTableModel().addRow(row);
 					
@@ -128,6 +136,8 @@ public class CustomerController {
 					customerPanel.getDayComboBox().setSelectedIndex(0);
 					customerPanel.getMonthComboBox().setSelectedIndex(0);
 					customerPanel.getGenderComboBox().setSelectedIndex(0);
+					customerPanel.getStreetTextField().setText(null);
+					customerPanel.getHouseNoTextField().setText(null);
 				}
 				
 			}
@@ -145,7 +155,7 @@ public class CustomerController {
 
 					customerPanel.getTableModel().removeRow(customerPanel.getTable().getSelectedRow());
 				}
-						
+				
 			}
 			
 		});
@@ -169,7 +179,7 @@ public class CustomerController {
 						
 						for(int i=0; i<numRows ; i++ ) {
 
-							String s = customerPanel.getTableModel().getValueAt(idx[i], 6).toString();
+							String s = customerPanel.getTableModel().getValueAt(idx[i], 0).toString();
 							sb.append(s);
 							sb.append("\n");
 						}
@@ -218,9 +228,9 @@ public class CustomerController {
 				
 			}
 		});
+
 		
 	}
-
 	
 	public void setView(MainView view) {
 		this.view = view;

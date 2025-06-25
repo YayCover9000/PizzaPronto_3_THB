@@ -29,6 +29,8 @@ public class CustomerPanel extends JPanel {
 	private JTextField firstNameTextField;
 	private JTextField lastNameTextField;
 	private JTextField yearTextField;
+	private JTextField houseNoTextField;
+	private JTextField streetTextField;
 	private JLabel dateOfBirthLabel;
 	private JLabel firstNameLabel;
 	private JLabel lastNameLabel;
@@ -39,6 +41,8 @@ public class CustomerPanel extends JPanel {
 	private JLabel day;
 	private JLabel month;
 	private JLabel year;
+	private JLabel streetLabel;
+	private JLabel houseNoLabel;
 	private JComboBox<String> genderComboBox;
 	private JComboBox<Integer> dayComboBox;
 	private JComboBox<Integer> monthComboBox;
@@ -79,6 +83,7 @@ public class CustomerPanel extends JPanel {
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		c.weightx = 0;
+		c.weighty = 1;
 		c.insets = new Insets(10, 30, 10, 10);
 		add(addPanel, c);
 
@@ -114,9 +119,9 @@ public class CustomerPanel extends JPanel {
 	private void addComponentsToHintPanel(JPanel hintPanel) {
 		hintPanel.setLayout(new GridBagLayout());
 		hintLabel = new JLabel("<html><p><strong><span style=\"font-size: 10px;\">Hinweis</span></strong></p>\n" + 
-				"<p><span style=\"font-size: 10px;\">Es muessen in der Klasse CustomerVO zwingend die Methoden hashCode() und equals() implementiert sein, sonst ist es nicht möglich einen neuen Kunden hinzuzufuegen.\n" +
-				"Beim Eintragen eines neuen Kunden wird mit der equals() Methode geprüft, ob sich der gleiche Kunde bereits in der Liste befindet. Bei korrekter Implementierung wird eine Nachricht angezeigt.\n" +
-				"Mit dem Print Button können die in der Liste ausgewählten Kunden nochmal ausgegeben werden. Hierfür muss in Klasse CustomerVO die toString() Methode implementiert sein.</span></p></html>");
+				"<p><span style=\"font-size: 10px;\">Um einen neuen Angestaellten hinzuzufuegen, muss die gesamte " + 
+				"Vererbungshierarchie, welche in Uebung 4 eingefuehrt wurde, implementiert sein. " +
+				"Saemtliche setter und getter fuer die neuen Attribute muessen implementiert sein.</span></p></html>");
 		
 		
 		GridBagConstraints c = new GridBagConstraints();
@@ -174,59 +179,98 @@ public class CustomerPanel extends JPanel {
 		c.gridwidth = 2;
 		c.insets = new Insets(0, 10, 10, 10);
 		addPanel.add(lastNameTextField, c);
-		
-		dateOfBirthLabel = new JLabel("Date of Birth:");
+
+		streetLabel = new JLabel("Street:");
 		c.gridx = 0;
 		c.gridy = 6;
-		c.gridwidth = 2;
-		c.insets = new Insets(0, 10, 10, 10);
-		addPanel.add(dateOfBirthLabel, c);
-
+		c.gridwidth = 1;
+		c.insets = new Insets(0, 12, 0, 10);
+		c.weightx = 1;
+		addPanel.add(streetLabel, c);
 		
-		datePanel = new JPanel();
-//		datePanel.setLayout(new BoxLayout(datePanel, BoxLayout.PAGE_AXIS));
+		streetTextField = new JTextField();
+		GridBagConstraints c8 = new GridBagConstraints();
+		c8.gridx = 0;
+		c8.gridy = 7;
+		c8.gridwidth = 1;
+		c8.insets = new Insets(0, 10, 10, 10);
+		c8.fill = GridBagConstraints.HORIZONTAL;
+		addPanel.add(streetTextField, c8);
+		
+		houseNoLabel = new JLabel("No:");
+		c.gridx = 1;
+		c.gridy = 6;
+		c.gridwidth = 1;
+		c.insets = new Insets(0, 12, 0, 10);
+		c.weightx = 0.2;
+		addPanel.add(houseNoLabel, c);
+		
+		houseNoTextField = new JTextField();
+		GridBagConstraints c9 = new GridBagConstraints();
+		c9.gridx = 1;
+		c9.gridy = 7;
+		c9.gridwidth = 1;
+		c9.insets = new Insets(0, 10, 10, 10);
+		c9.fill = GridBagConstraints.HORIZONTAL;
+		addPanel.add(houseNoTextField, c9);
+
+		datePanel = new JPanel(new GridBagLayout());
 		datePanel.setBackground(Color.WHITE);
 		c.gridx = 0;
-		c.gridy = 7;
+		c.gridy = 9;
 		c.gridwidth = 2;
-		c.insets = new Insets(0, 6, 10, 10);
+		c.insets = new Insets(10, 9, 25, 10);
 		addPanel.add(datePanel, c);
 		
+		dateOfBirthLabel = new JLabel("Date of Birth:");
+		GridBagConstraints c7 = new GridBagConstraints();
+		c7.gridx = 0;
+		c7.gridy = 0;
+		c7.gridwidth = 4;
+		c7.anchor = GridBagConstraints.FIRST_LINE_START;
+		c7.insets = new Insets(0,3,10,0);
+		datePanel.add(dateOfBirthLabel, c7);
+		
 		day = new JLabel("Day:");
-//		day.setAlignmentX(Component.LEFT_ALIGNMENT);
-		datePanel.add(day);
+		GridBagConstraints c1 = new GridBagConstraints();
+		c1.gridx = 0;
+		c1.gridy = 1;
+		datePanel.add(day, c1);
 		
 		Integer[] days = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31};
 		dayComboBox = new JComboBox<Integer>(days);
-//		dayComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-		datePanel.add(dayComboBox);
+		GridBagConstraints c2 = new GridBagConstraints();
+		c2.gridx = 1;
+		c2.gridy = 1;
+		datePanel.add(dayComboBox, c2);
 		
 		month = new JLabel("Month:");
-//		month.setAlignmentX(Component.LEFT_ALIGNMENT);
-		datePanel.add(month);
+		GridBagConstraints c3 = new GridBagConstraints();
+		c3.gridx = 2;
+		c3.gridy = 1;
+		datePanel.add(month, c3);
 		
 		Integer[] months = {1,2,3,4,5,6,7,8,9,10,11,12};
 		monthComboBox = new JComboBox<Integer>(months);
-//		monthComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-		datePanel.add(monthComboBox);
+		GridBagConstraints c4 = new GridBagConstraints();
+		c4.gridx = 3;
+		c4.gridy = 1;
+		datePanel.add(monthComboBox, c4);
 		
 		year = new JLabel("Year:");
-		c.gridx = 0;
-		c.gridy = 9;
-		c.gridwidth = 1;
-		c.weightx = 0;
-		c.insets = new Insets(0, 12, 10, 0);
-		addPanel.add(year, c);
+		GridBagConstraints c5 = new GridBagConstraints();
+		c5.gridx = 0;
+		c5.gridy = 2;
+		c5.insets = new Insets(10,3,0,0);
+		datePanel.add(year, c5);
 		
 		yearTextField = new JTextField();
-	//	yearTextField.setPreferredSize(new Dimension(60,20));
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 1;
-		c.gridy = 9;
-		c.weightx = 1;
-		c.gridwidth = 1;
-		c.insets = new Insets(0, 10, 10, 10);
-		addPanel.add(yearTextField, c);
+		GridBagConstraints c6 = new GridBagConstraints();
+		c6.gridx = 1;
+		c6.gridy = 2;
+		c6.fill = GridBagConstraints.HORIZONTAL;
+		c6.insets = new Insets(10,0,0,0);
+		datePanel.add(yearTextField, c6);
 		
 		
 		genderLabel = new JLabel("Gender:");
@@ -234,7 +278,7 @@ public class CustomerPanel extends JPanel {
 		c.gridx = 0;
 		c.gridy = 10;
 		c.gridwidth = 2;
-		c.insets = new Insets(0, 10, 0, 10);
+		c.insets = new Insets(0, 12, 5, 10);
 		addPanel.add(genderLabel, c);
 		
 		String[] genders = {"female", "male", "diverse"};
@@ -251,8 +295,9 @@ public class CustomerPanel extends JPanel {
 		c.gridx = 0;
 		c.gridy = 12;
 		c.gridwidth = 2;
-		c.insets = new Insets(0, 10, 20, 12);
-		c.fill = GridBagConstraints.NONE;
+		c.weighty = 1;
+		c.insets = new Insets(0, 12, 10, 12);
+		c.fill = GridBagConstraints.HORIZONTAL;
 		c.anchor = GridBagConstraints.LAST_LINE_END;
 		addPanel.add(addButton, c);
 
@@ -263,12 +308,12 @@ public class CustomerPanel extends JPanel {
 
 		GridBagConstraints c = new GridBagConstraints();
 
-		String[] columns = { "Customer ID", "First Name", "Last Name", "Gender", "Age", "hashCode", "Object"};
+		String[] columns = { "Object", "Customer ID", "First Name", "Last Name", "Street", "No.", "Gender", "Age", "hashCode"};
 		tableModel = new DefaultTableModel();
 		tableModel.setColumnIdentifiers(columns);
 		table = new JTable(tableModel);
 		TableColumnModel tcm = table.getColumnModel();
-		tcm.removeColumn(tcm.getColumn(6));
+		tcm.removeColumn(tcm.getColumn(0));
 		table.setFont(new Font("Arial", Font.PLAIN, 14));
 		table.setRowHeight(30);
 		table.setShowGrid(false);
@@ -559,6 +604,22 @@ public class CustomerPanel extends JPanel {
 
 	public void setPrintButton(DefaultButton printButton) {
 		this.printButton = printButton;
+	}
+
+	public JTextField getHouseNoTextField() {
+		return houseNoTextField;
+	}
+
+	public void setHouseNoTextField(JTextField houseNoTextField) {
+		this.houseNoTextField = houseNoTextField;
+	}
+
+	public JTextField getStreetTextField() {
+		return streetTextField;
+	}
+
+	public void setStreetTextField(JTextField streetTextField) {
+		this.streetTextField = streetTextField;
 	}
 
 

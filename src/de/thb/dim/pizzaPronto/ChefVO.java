@@ -1,64 +1,64 @@
 package de.thb.dim.pizzaPronto;
+import java.awt.Color;
 
-import java.awt.*;
-import java.util.Objects;
+/**
+ * ChefVO represents the objects of chef 
+ * @author Robert Fischer, Gabriele Schmidt
+ * @version 3.0
+ *
+ */
+public class ChefVO extends EmployeeVO{
+	private Color colorApron;
+	
+	/**
+	 * initializing constructor
+	 * Initialize all instance attributes with values. 
+	 * 
+	 * @param lastName - Chef's second name
+	 * @param firstName - Chef's first name
+     *
+	 */
+	public ChefVO(String pNo,String lastName, String firstName) {
+		super( pNo, lastName,  firstName);
+	}
+	
+	/**
+	 * default constructor 
+	 * calls initializing constructor with default values for instance attributes
+	 * 
+	 */
+	public ChefVO() {
+		this(null, null,null);
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		
+		sb.append("\nChef:\n" );
+		
+		sb.append(super.toString());
+		
+		if(colorApron != null)
+			sb.append("\nApron " + colorApron.toString());
+		
+		return sb.toString();
+	}
 
-public class ChefVO {
-    private String lastName;
-    private String firstName;
-    private Color colorApron;
+	
+	/// 
+	/// Setter und Getter
+	///
 
-    public ChefVO() {
-        this(null, null, null) ;
-    }
-    public ChefVO(String lastName, String firstName, Color colorApron) {
-        setLastName(lastName);
-        setFirstName(firstName);
-        setColorApron(colorApron);
-    }
-    public String getLastName() {
-        return lastName;
-    }
+	public Color getColorApron() {
+		return colorApron;
+	}
 
-    //StandartMethoden
-    @Override
-    public String toString() {
-        return lastName + " " + firstName;
-    }
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ChefVO chefVO = (ChefVO) o;
-        return Objects.equals(lastName, chefVO.lastName) && Objects.equals(firstName, chefVO.firstName) && Objects.equals(colorApron, chefVO.colorApron);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(lastName, firstName, colorApron);
-    }
-
-    //Setter Getter
-    public void setLastName(String lastName) {
-        if(Objects.nonNull(lastName)) {
-            this.lastName = lastName;
-        }
-    }
-    public String getFirstName() {
-        return firstName;
-    }
-    public void setFirstName(String firstName) {
-        if (Objects.nonNull(firstName)) {
-            this.firstName = firstName;
-        }
-    }
-    public Color getColorApron() {
-        return colorApron;
-    }
-    public void setColorApron(Color colorApron) {
-        if (Objects.nonNull(colorApron)) {
-            this.colorApron = colorApron;
-        }
-    }
-
-}
+	public void setColorApron(Color colorApron) {
+		this.colorApron = colorApron;
+	}
+} // End  of class

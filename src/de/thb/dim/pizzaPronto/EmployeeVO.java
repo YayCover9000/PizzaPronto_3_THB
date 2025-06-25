@@ -2,8 +2,12 @@ package de.thb.dim.pizzaPronto;
 
 import java.util.Objects;
 
-
-public abstract class EmployeeVO extends PersonVO {
+/**
+ * EmployeeVO represents an object of employees and inherits from PersonVO 
+ * @author Robert Fischer
+ * @version 2.0
+ */
+public  class EmployeeVO extends PersonVO {
 	protected String personnelNo;
 	protected float salary;
 	protected int vacationDays;
@@ -26,6 +30,16 @@ public abstract class EmployeeVO extends PersonVO {
 	public int hashCode() {
 		return Objects.hash(personnelNo);
 	}
+//	@Override
+//	public int hashCode() {
+//		final int prime = 31;
+//		int result = 1;
+//		result = prime * result + ((personnelNo == null) ? 0 : personnelNo.hashCode());
+//		return result;
+//	}
+
+
+	// Only personnelNo, do not call equals of superclass
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null)
@@ -37,6 +51,26 @@ public abstract class EmployeeVO extends PersonVO {
 		EmployeeVO other = (EmployeeVO) obj;
 		return Objects.equals(personnelNo, other.personnelNo);
 	}
+	
+//
+//	@Override
+//	public boolean equals(Object obj) {
+//		if (obj == null)
+//			return false;
+//		if (this == obj)
+//			return true;
+//		if (getClass() != obj.getClass()) {
+//			return false;}
+//		EmployeeVO other = (EmployeeVO) obj;
+//		if (personnelNo == null) {
+//			if (other.personnelNo != null)
+//				return false;
+//		} else if (!personnelNo.equals(other.personnelNo))
+//			return false;
+//		return true;
+//	}
+
+	
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 
@@ -49,7 +83,12 @@ public abstract class EmployeeVO extends PersonVO {
 
 		return sb.toString();
 	}
+
+
+
+	//
 	// Setter und Getter
+	//
 	public String getPersonnelNo() {
 		return personnelNo;
 	}
