@@ -1,6 +1,7 @@
 package de.thb.dim.pizzaProntoGUI.controller;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -8,7 +9,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalDateTime;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.time.format.DateTimeFormatter;
 import java.util.Vector;
 
@@ -19,6 +21,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
@@ -31,7 +34,9 @@ import javax.swing.table.DefaultTableModel;
 import de.thb.dim.pizzaPronto.CustomerVO;
 import de.thb.dim.pizzaPronto.DishVO;
 import de.thb.dim.pizzaPronto.OrderVO;
+import de.thb.dim.pizzaPronto.Ordering;
 import de.thb.dim.pizzaProntoGUI.view.CustomerPanel;
+import de.thb.dim.pizzaProntoGUI.view.DefaultButton;
 import de.thb.dim.pizzaProntoGUI.view.MainView;
 import de.thb.dim.pizzaProntoGUI.view.MenuPanel;
 import de.thb.dim.pizzaProntoGUI.view.OrderPanel;
@@ -41,52 +46,47 @@ public class OrderController {
 	@SuppressWarnings("unused")
 	private MainView view;
 	
+	private OrderPanel orderPanel;
+	private CustomerPanel customerPanel;
+	private MenuPanel menuPanel;
+	
 	private JTable orderMenuTable;
 	private JTable shoppingBasketTable;
 	private JTable orderTable;
+	private JTable customerTable;
+	private JTable menuTable;
 	private DefaultTableModel orderMenuTableModel;
 	private DefaultTableModel shoppingBasketTableModel;
 	private DefaultTableModel orderTableModel;
-	
-	private JLabel itemCountLabel;
-	private JLabel totalPriceLabel;
+	private DefaultTableModel customerTableModel;
+	private DefaultTableModel menuTableModel;
 
 	public OrderController(MainView view) {
 		
-		setView(view);
-		
-		OrderPanel orderPanel = view.getLayoutPanel().getOrderPanel();
-		CustomerPanel customerPanel = view.getLayoutPanel().getCustomerPanel();
-		MenuPanel menuPanel = view.getLayoutPanel().getMenuPanel();
-		
-		JTable customerTable = customerPanel.getTable();
-		JTable menuTable = menuPanel.getTable();
+		this.view = view;		
+		orderPanel = view.getLayoutPanel().getOrderPanel();
+		customerPanel = view.getLayoutPanel().getCustomerPanel();
+		menuPanel = view.getLayoutPanel().getMenuPanel();		
+		customerTable = customerPanel.getTable();
+		menuTable = menuPanel.getTable();
 		orderMenuTable = orderPanel.getMenuTable();
 		shoppingBasketTable = orderPanel.getShoppingBasketTable();
 		orderTable = orderPanel.getCurrentOrderstable();
-		
-		ListSelectionModel tableSelection = orderTable.getSelectionModel();
-		DefaultTableModel customerTableModel = (DefaultTableModel) customerTable.getModel();
-		DefaultTableModel menuTableModel = (DefaultTableModel) menuTable.getModel();
-		orderMenuTableModel = (DefaultTableModel) orderMenuTable.getModel();
+		customerTableModel = (DefaultTableModel) customerTable.getModel();
+		menuTableModel = (DefaultTableModel) menuTable.getModel();
+//		orderMenuTableModel = (DefaultTableModel) orderMenuTable.getModel();
 		shoppingBasketTableModel = (DefaultTableModel) shoppingBasketTable.getModel();
 		orderTableModel = (DefaultTableModel) orderTable.getModel();
 		
+		ListSelectionModel tableSelection = orderTable.getSelectionModel();
+		
 		JButton startButton = orderPanel.getStartButton();
-		JButton addButton = orderPanel.getAddButton();
+		JButton addDishButton = orderPanel.getAddDishButton();
 		JButton removeButton = orderPanel.getRemoveButton();
 		JButton printButton = orderPanel.getPrintButton();
+		JButton confirmButton = orderPanel.getConfirmButton();
 		
-		JLabel numberLabelRight = orderPanel.getNumberLabelRight();
-		JLabel idLabelRight = orderPanel.getIdLabelRight();
-		JLabel nameLabelRight = orderPanel.getNameLabelRight();
-		JLabel genderLabelRight = orderPanel.getGenderLabelRight();
-		JLabel dateOfBirthRight = orderPanel.getDateOfBirthRight();
-		JLabel startedLabelRight = orderPanel.getStartedLabelRight();
-		JLabel streetLabelRight = orderPanel.getStreetLabelRight();
-		JLabel stateLabelRight = orderPanel.getStateLabelRight();
-		itemCountLabel = orderPanel.getItemCountLabel();
-		totalPriceLabel = orderPanel.getTotalPriceLabel();
+
 
 		
 		@SuppressWarnings("unchecked")
@@ -110,27 +110,24 @@ public class OrderController {
 				}
 				
 				if(isFound == true) {
-					CustomerVO customer = (CustomerVO) customerTableModel.getValueAt(i-1, 0);
-					OrderVO order = new OrderVO(LocalDateTime.now(), customer);
+					//CustomerVO customer = (CustomerVO) customerTableModel.getValueAt(i-1, 0);
+					//OrderVO order = new OrderVO(LocalDateTime.now(), customer);
 					
-					Object[] row = new Object[8];
+					Ordering ordering = new Ordering();
 					
-					row[0] = order;
-					row[1] = order.getOrderNo();
+					ordering.startNewOrder((CustomerVO) customerTableModel.getValueAt(i-1, 0));					
+					
+					Object[] row = new Object[2];
+					
+					row[0] = ordering;
+					row[1] = ordering.getCurrentOrder().getOrderNo();
 					
 					orderTableModel.addRow(row);
 					
-					numberLabelRight.setText(Integer.toString(order.getOrderNo()));
-					startedLabelRight.setText(String.format("%1$tm/%1$td/%1$tY %1$tH:%1$tM", order.getTimestampStartedOrder()));
-					idLabelRight.setText(Integer.toString(order.getCustomer().getId()));
-					nameLabelRight.setText(order.getCustomer().getFirstName() + " " + order.getCustomer().getLastName());
-					genderLabelRight.setText(order.getCustomer().getGender());
-					dateOfBirthRight.setText(order.getCustomer().getDateOfBirth().format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
-					itemCountLabel.setText(Integer.toString(order.getIndex()));
-					streetLabelRight.setText(order.getCustomer().getStreet() + " " + order.getCustomer().getHouseNumber());
-					stateLabelRight.setText(order.getState());
-					
 					orderTable.setRowSelectionInterval(orderTable.getRowCount()-1, orderTable.getRowCount()-1);
+					
+					displayOrderDetails(ordering);				
+					
 				}
 			}
 			
@@ -140,20 +137,14 @@ public class OrderController {
 
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
+			
 				int index = orderTable.getSelectedRow();
-				OrderVO order = (OrderVO) orderTableModel.getValueAt(index, 0);
 				
-				numberLabelRight.setText(Integer.toString(order.getOrderNo()));
-				startedLabelRight.setText(String.format("%1$tm/%1$td/%1$tY %1$tH:%1$tM", order.getTimestampStartedOrder()));
-				idLabelRight.setText(Integer.toString(order.getCustomer().getId()));
-				nameLabelRight.setText(order.getCustomer().getFirstName() + " " + order.getCustomer().getLastName());
-				genderLabelRight.setText(order.getCustomer().getGender());
-				dateOfBirthRight.setText(order.getCustomer().getDateOfBirth().format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
-				itemCountLabel.setText(Integer.toString(order.getNumberOfDishes()));
-				streetLabelRight.setText(order.getCustomer().getStreet() + " " + order.getCustomer().getHouseNumber());
-				stateLabelRight.setText(order.getState());
+				Ordering ordering = (Ordering) orderTableModel.getValueAt(index, 0);
 				
-				updateShoppingBasket();
+				displayOrderDetails(ordering);
+				updateShoppingBasket(ordering);
+				orderPanel.getServiceTextArea().setText(null);
 			}
 			
 		});
@@ -175,44 +166,62 @@ public class OrderController {
 			
 		});
 		
-		menuTableModel.addTableModelListener(new TableModelListener() {
+//		menuTableModel.addTableModelListener(new TableModelListener() {
+//
+//			@Override
+//			public void tableChanged(TableModelEvent e) {
+//				int rowCount = menuTable.getRowCount();
+//				
+//				orderMenuTableModel.setRowCount(0);
+//				
+//				for(int i = 0;i < rowCount; i++) {
+//						Object[] row = new Object[6];
+//					
+//						row[0] = menuTableModel.getValueAt(i, 0);
+//						row[1] = menuTableModel.getValueAt(i, 0);
+//						
+//						orderMenuTableModel.addRow(row);											
+//				}
+//			}
+//			
+//		});
+		
+		
+		confirmButton.addActionListener(new ActionListener() {
 
 			@Override
-			public void tableChanged(TableModelEvent e) {
-				int rowCount = menuTable.getRowCount();
+			public void actionPerformed(ActionEvent e) {
 				
-				orderMenuTableModel.setRowCount(0);
+				Ordering ordering = null;
 				
-				for(int i = 0;i < rowCount; i++) {
-						Object[] row = new Object[6];
+				try {
+					ordering = getSelectedOrder();
 					
-						row[0] = menuTableModel.getValueAt(i, 0);
-						row[1] = menuTableModel.getValueAt(i, 0);
-						
-						orderMenuTableModel.addRow(row);											
-				}
+					ByteArrayOutputStream os = new ByteArrayOutputStream();					
+					PrintStream ps = new PrintStream(os);
+					
+					PrintStream old = System.out;
+					System.setOut(ps);
+
+					ordering.confirmOrder();
+
+					System.out.flush();
+					System.setOut(old);
+
+					orderPanel.getServiceTextArea().setText(os.toString());	
+					
+					updateShoppingBasket(ordering);
+					displayOrderDetails(ordering);
+					
+				} catch (ArrayIndexOutOfBoundsException | NullPointerException ex) {
+					
+				} 
+				
 			}
 			
 		});
 		
-		addButton.addActionListener(new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				OrderVO order = (OrderVO) orderTableModel.getDataVector().get(orderTable.getSelectedRow()).get(0);
-				
-				int[] index = orderMenuTable.getSelectedRows();
-				for(int i=0; i<index.length ; i++ ) {
-					
-					DishVO dish = (DishVO)orderMenuTableModel.getDataVector().get(index[i]).get(0);
-
-					order.addDish(dish);					
-				}
-				updateShoppingBasket();			
-				
-			}
-			
-		});
 		
 		
 		
@@ -220,9 +229,140 @@ public class OrderController {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				OrderVO order = (OrderVO) orderTableModel.getDataVector().get(orderTable.getSelectedRow()).get(0);
-				order.deleteDish();
-				updateShoppingBasket();
+				Ordering ordering = getSelectedOrder();
+				ordering.deleteDish();
+				updateShoppingBasket(ordering);
+			}
+			
+		});
+		
+		addDishButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				EventQueue.invokeLater(new Runnable(){
+					
+					@Override
+					public void run(){
+						
+						JFrame frame = new JFrame("Add Dish to Shopping Basket");						
+						
+						JPanel outerPanel = new JPanel(new GridBagLayout());
+						outerPanel.setOpaque(true);
+						outerPanel.setBackground(new Color(0xeaeaea));
+						
+						JPanel menuPanel = new JPanel();
+						menuPanel.setBackground(Color.WHITE);
+						menuPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+
+						GridBagConstraints c0 = new GridBagConstraints();
+						c0.weightx = 1;
+						c0.weighty = 1;
+						c0.fill = GridBagConstraints.BOTH;
+						c0.insets = new Insets(20, 20, 20, 20);
+						outerPanel.add(menuPanel, c0);
+						
+						menuPanel.setLayout(new GridBagLayout());
+							
+						JLabel menuLabel = new JLabel("Menu");
+						menuLabel.setFont(new Font("Arial", Font.PLAIN, 24));
+						menuLabel.setForeground(Color.DARK_GRAY);
+						GridBagConstraints c1 = new GridBagConstraints();
+						c1.gridx = 0;
+						c1.gridy = 0;
+						c1.weightx = 1;
+						c1.insets = new Insets(10, 12, 10, 10);
+						c1.anchor = GridBagConstraints.FIRST_LINE_START;
+						menuPanel.add(menuLabel, c1);										
+							
+						JScrollPane menuTableScrollPane = new JScrollPane(menuTable);
+						menuTableScrollPane.setBorder(BorderFactory.createEmptyBorder());
+						menuTableScrollPane.getViewport().setBackground(Color.WHITE);
+						GridBagConstraints c2 = new GridBagConstraints();
+						c2.gridx = 0;
+						c2.gridy = 1;
+						c2.weightx = 1;
+						c2.weighty = 1;
+						c2.fill = GridBagConstraints.BOTH;
+						c2.insets = new Insets(10, 10, 10, 10);
+						menuPanel.add(menuTableScrollPane, c2);
+						
+						JButton addButton = new DefaultButton("Add Dish to Order");
+						GridBagConstraints c3 = new GridBagConstraints();
+						c3.gridx = 0;
+						c3.gridy = 2;
+						c3.anchor = GridBagConstraints.LAST_LINE_END;
+						c3.insets = new Insets(10, 10, 10, 10);
+						menuPanel.add(addButton, c3);
+						
+						frame.add(outerPanel);
+						frame.setPreferredSize(new Dimension(858,480));
+//						frame.setLocationRelativeTo(null);
+						frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+						frame.pack();
+						frame.setVisible(true);
+						
+						addButton.addActionListener(new ActionListener() {
+						
+							@Override
+								public void actionPerformed(ActionEvent e) {
+								Ordering ordering = getSelectedOrder();
+									if(ordering == null) {
+										EventQueue.invokeLater(new Runnable(){
+										@Override
+										public void run(){
+											JFrame frame = new JFrame("Note");
+																
+											JPanel innerPanel = new JPanel(new GridBagLayout());
+											innerPanel.setOpaque(true);
+											innerPanel.setBackground(Color.WHITE);
+											innerPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+											
+											GridBagConstraints c0 = new GridBagConstraints();
+											
+											JLabel label = new JLabel("No started order.");
+											label.setFont(new Font("Arial", Font.PLAIN, 18));
+											label.setForeground(new Color(0x606060));
+
+											c0.insets = new Insets(20,20,20,20);
+											innerPanel.add(label, c0);
+											
+											JPanel outerPanel = new JPanel(new GridBagLayout());
+											outerPanel.setOpaque(true);
+											outerPanel.setBackground(new Color(0xeaeaea));
+											
+											GridBagConstraints c1 = new GridBagConstraints();
+											c1.insets = new Insets(20,20,20,20);
+											outerPanel.add(innerPanel,c1);
+											
+											frame.add(outerPanel);
+											
+											frame.setLocationRelativeTo(null);
+											frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+											frame.pack();
+											frame.setVisible(true);
+										}
+										
+									});
+									}else {
+									int[] index = menuTable.getSelectedRows();
+									for(int i=0; i<index.length ; i++ ) {
+										
+										DishVO dish = (DishVO)menuTableModel.getDataVector().get(index[i]).get(0);
+						
+										ordering.addDish(dish);					
+									}
+									updateShoppingBasket(ordering);			
+									
+								}
+							}		
+						});
+
+						
+					}
+				
+				});
 			}
 			
 		});
@@ -231,7 +371,8 @@ public class OrderController {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				OrderVO order = (OrderVO) orderTableModel.getDataVector().get(orderTable.getSelectedRow()).get(0);
+				Ordering ordering = getSelectedOrder();
+				OrderVO order = ordering.getCurrentOrder();
 				
 				EventQueue.invokeLater(new Runnable(){
 					
@@ -290,18 +431,45 @@ public class OrderController {
 		
 	}
 	
-	private void updateShoppingBasket() {
-		OrderVO order = (OrderVO) orderTableModel.getDataVector().get(orderTable.getSelectedRow()).get(0);
+	private void updateShoppingBasket(Ordering ordering) {
+		OrderVO order = ordering.getCurrentOrder();
 		shoppingBasketTableModel.setRowCount(0);
 		for(int i = 0; i < order.getNumberOfDishes(); i++) {
-			Object[] row = new Object[3];
+			Object[] row = new Object[2];
 			row[1] = order.getShoppingBasket()[i];
 			
 			shoppingBasketTableModel.addRow(row);
 		}
-		itemCountLabel.setText(Integer.toString(order.getNumberOfDishes()));
-		totalPriceLabel.setText(String.valueOf(order.calculatePriceDishes()) + " €");
+		orderPanel.getItemCountLabel().setText(Integer.toString(order.getNumberOfDishes()));
+		orderPanel.getTotalPriceLabel().setText(String.format("%.2f Euro", ordering.calculateTotalPrice()));
 
+	}
+	
+	private void displayOrderDetails(Ordering ordering) {
+		
+		OrderVO order = ordering.getCurrentOrder();
+		CustomerVO customer = ordering.getCurrentCustomer();		
+		
+		orderPanel.getNumberLabelRight().setText(Integer.toString(order.getOrderNo()));
+		orderPanel.getStartedLabelRight().setText(String.format("%1$tm/%1$td/%1$tY %1$tH:%1$tM", order.getTimestampStartedOrder()));
+		orderPanel.getIdLabelRight().setText(Integer.toString(customer.getId()));
+		orderPanel.getNameLabelRight().setText(customer.getFirstName() + " " + customer.getLastName());
+		orderPanel.getGenderLabelRight().setText(customer.getGender());
+		orderPanel.getDateOfBirthRight().setText(customer.getDateOfBirth().format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
+		orderPanel.getItemCountLabel().setText(Integer.toString(order.getIndex()));
+		orderPanel.getStreetLabelRight().setText(customer.getStreet() + " " + customer.getHouseNumber());
+		orderPanel.getStateLabelRight().setText(order.getState());
+
+	}
+	
+	private Ordering getSelectedOrder() {
+		Ordering ordering = null;
+		if(!(orderTableModel.getDataVector().isEmpty())) {
+			
+				
+			ordering = (Ordering) orderTableModel.getDataVector().get(orderTable.getSelectedRow()).get(0);
+		}
+		return ordering;
 	}
 	
 	public void setView(MainView view) {
