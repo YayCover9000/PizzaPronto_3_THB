@@ -15,7 +15,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
 
 @SuppressWarnings("serial")
 public class StaffPanel extends JPanel {
@@ -26,7 +25,6 @@ public class StaffPanel extends JPanel {
 	private JPanel hintPanel;
 	private JTextField firstNameTextField;
 	private JTextField lastNameTextField;
-	private JTextField personnelNoTextField;
 	private JLabel firstNameLabel;
 	private JLabel lastNameLabel;
 	private JLabel colorApronLabel;
@@ -34,12 +32,10 @@ public class StaffPanel extends JPanel {
 	private JLabel tableTopicLabel;
 	private JLabel hintLabel;
 	private JLabel positionLabel;
-	private JLabel personnelNoLabel;
 	private JComboBox<String> colorComboBox;
 	private JComboBox<String> employeeTypeComboBox;
 	private DefaultButton addButton;
 	private DefaultButton removeButton;
-	private DefaultButton printButton;
 	private JTable table;
 	private JScrollPane tableScrollPane;
 	private DefaultTableModel tableModel;
@@ -107,12 +103,7 @@ public class StaffPanel extends JPanel {
 	private void addComponentsToHintPanel(JPanel hintPanel) {
 		hintPanel.setLayout(new GridBagLayout());
 		hintLabel = new JLabel("<html><p><strong><span style=\"font-size: 10px;\">Hinweis</span></strong></p>\n" + 
-				"<p><span style=\"font-size: 10px;\">Um einen neuen Angestaellten hinzuzufuegen, muss die gesamte " +
-				"Vererbungshierarchie, welche in Uebung 4 eingefuehrt wurde, implementiert sein. " +
-				"Durch die vereinfachten Initalisierungskonstruktoren, reicht zum Erstellen eines Objekts " +
-				"der Vor- und Nachname, sowie die Personalnummer. Alle anderen Attribute koennen im Nachhinein " +
-				" ueber die Tabelle editiert werden. Dafuer muessen saemtliche getter und setter richtig " +
-				"implementiert sein. Die Farbe der Schuerze kann mit Farbnamen eingegeben werden. Bspw. 'black' oder 'red'.</span></p></html>");
+				"<p><span style=\"font-size: 10px;\">Um einen Angestellten hinzuzufuegen, muessen in der Klasse ChefVO der Intitialisierungskonstruktor, die entsprechenden Instanzvariablen und die dazugehoerigen Setter und Getter implementiert sein.</span></p></html>");
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 0;
@@ -145,67 +136,55 @@ public class StaffPanel extends JPanel {
 		c.insets = new Insets(10, 12, 0, 10);
 		addPanel.add(positionLabel, c);
 		
-		String[] employeeType = {"Chef", "Delivery Man"};
-		employeeTypeComboBox = new JComboBox<String>(employeeType);
+		String[] employeeType = {"Chef"};
+		JComboBox employeeTypeComboBox = new JComboBox<String>(employeeType);
 		c.gridx = 0;
 		c.gridy = 2;
 		c.insets = new Insets(0, 10, 0, 10);
 		addPanel.add(employeeTypeComboBox, c);
-		
-		personnelNoLabel = new JLabel("Personnel No:");
-		c.gridx = 0;
-		c.gridy = 3;
-		c.insets = new Insets(10, 12, 0, 10);
-		addPanel.add(personnelNoLabel, c);
-		
-		personnelNoTextField = new JTextField();
-		c.gridx = 0;
-		c.gridy = 4;
-		c.insets = new Insets(0, 10, 10, 10);
-		addPanel.add(personnelNoTextField, c);
 				
 		firstNameLabel = new JLabel("First Name:");
 		c.gridx = 0;
-		c.gridy = 5;
-		c.insets = new Insets(0, 12, 0, 10);
+		c.gridy = 3;
+		c.insets = new Insets(10, 12, 0, 10);
 		addPanel.add(firstNameLabel, c);
 		
 		firstNameTextField = new JTextField();
 		c.gridx = 0;
-		c.gridy = 6;
+		c.gridy = 4;
 		c.insets = new Insets(0, 10, 10, 10);
 		addPanel.add(firstNameTextField, c);
 		
 		lastNameLabel = new JLabel("Last Name:");
 		c.gridx = 0;
-		c.gridy = 7;
+		c.gridy = 5;
 		c.insets = new Insets(0, 12, 0, 10);
 		addPanel.add(lastNameLabel, c);
 		
 		lastNameTextField = new JTextField();
 		c.gridx = 0;
-		c.gridy = 8;
+		c.gridy = 6;
 		c.insets = new Insets(0, 10, 10, 10);
 		addPanel.add(lastNameTextField, c);
 		
-//		colorApronLabel = new JLabel("Apron Color:");
-//		c.gridx = 0;
-//		c.gridy = 9;
-//		c.insets = new Insets(0, 12, 0, 10);
-//		addPanel.add(colorApronLabel, c);
-//		
-//		String[] colors = {"White", "Black", "Red", "Green", "Blue", "Yellow", "Pink"};
-//		colorComboBox = new JComboBox<String>(colors);
-//		c.gridx = 0;
-//		c.gridy = 10;
-//		c.insets = new Insets(0, 10, 20, 10);
-//		addPanel.add(colorComboBox, c);
+		colorApronLabel = new JLabel("Apron Color:");
+		c.gridx = 0;
+		c.gridy = 7;
+		c.insets = new Insets(0, 12, 0, 10);
+		addPanel.add(colorApronLabel, c);
+		
+		String[] colors = {"White", "Black", "Red", "Green", "Blue", "Yellow", "Pink"};
+		colorComboBox = new JComboBox<String>(colors);
+		c.gridx = 0;
+		c.gridy = 8;
+		c.insets = new Insets(0, 10, 20, 10);
+		addPanel.add(colorComboBox, c);
 		
 		addButton = new DefaultButton("Add Employee");
 		c.gridx = 0;
-		c.gridy = 11;
-		c.insets = new Insets(0, 13, 20, 13);
-		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridy = 9;
+		c.insets = new Insets(0, 10, 20, 12);
+		c.fill = GridBagConstraints.NONE;
 		c.anchor = GridBagConstraints.LAST_LINE_END;
 		addPanel.add(addButton, c);
 
@@ -216,12 +195,10 @@ public class StaffPanel extends JPanel {
 
 		GridBagConstraints c = new GridBagConstraints();
 
-		String[] columns = { "Object", "Type", "Personnel No", "First Name", "Last Name", "Street", "No", "Salery", "Vacation Days", "Drivers License", "Apron Color", "hashCode" };
+		String[] columns = { "First Name", "Last Name", "Apron Color" };
 		tableModel = new DefaultTableModel();
 		tableModel.setColumnIdentifiers(columns);
 		table = new JTable(tableModel);
-		TableColumnModel tcm = table.getColumnModel();
-		tcm.removeColumn(tcm.getColumn(0));
 		table.setFont(new Font("Arial", Font.PLAIN, 14));
 		table.setRowHeight(30);
 		table.setShowGrid(false);
@@ -229,8 +206,6 @@ public class StaffPanel extends JPanel {
 		table.getTableHeader().setBackground(new Color(240, 240, 240));
 //		table.getTableHeader().setFont(new Font("Arial", Font.PLAIN, 14));
 		table.setSelectionBackground(new Color(0x50c443));
-		table.putClientProperty("terminateEditOnFocusLost", true);
-
 		
 		tableTopicLabel = new JLabel("Your current Employees");
 		tableTopicLabel.setFont(new Font("Arial", Font.PLAIN, 24));
@@ -238,7 +213,6 @@ public class StaffPanel extends JPanel {
 		
 		c.gridx = 0;
 		c.gridy = 0;
-		c.gridwidth = 2;
 		c.anchor = GridBagConstraints.FIRST_LINE_START;
 		c.insets = new Insets(10, 12, 10, 10);
 		tablePanel.add(tableTopicLabel, c);
@@ -250,28 +224,14 @@ public class StaffPanel extends JPanel {
 		c.gridy = 1;
 		c.weightx = 1;
 		c.weighty = 1;
-		c.gridwidth = 2;
 		c.fill = GridBagConstraints.BOTH;
 		c.insets = new Insets(10, 10, 10, 10);
 		tablePanel.add(tableScrollPane, c);
 		
-		printButton = new DefaultButton("Print Details");
+		removeButton = new DefaultButton("Remove Employee");
 		c.gridx = 0;
 		c.gridy = 2;
 		c.weighty = 0;
-		c.weightx = 1;
-		c.gridwidth = 1;
-		c.fill = GridBagConstraints.NONE;
-		c.anchor = GridBagConstraints.FIRST_LINE_END;
-		c.insets = new Insets(0, 10, 10, 10);
-		tablePanel.add(printButton, c);
-
-		
-		removeButton = new DefaultButton("Remove Employee");
-		c.gridx = 1;
-		c.gridy = 2;
-		c.weighty = 0;
-		c.weightx = 0;
 		c.fill = GridBagConstraints.NONE;
 		c.anchor = GridBagConstraints.FIRST_LINE_END;
 		c.insets = new Insets(0, 10, 10, 10);
@@ -434,46 +394,6 @@ public class StaffPanel extends JPanel {
 
 	public void setTableModel(DefaultTableModel tableModel) {
 		this.tableModel = tableModel;
-	}
-
-	public JPanel getHeaderPanel() {
-		return headerPanel;
-	}
-
-	public void setHeaderPanel(JPanel headerPanel) {
-		this.headerPanel = headerPanel;
-	}
-
-	public JLabel getPositionLabel() {
-		return positionLabel;
-	}
-
-	public void setPositionLabel(JLabel positionLabel) {
-		this.positionLabel = positionLabel;
-	}
-
-	public JComboBox<String> getEmployeeTypeComboBox() {
-		return employeeTypeComboBox;
-	}
-
-	public void setEmployeeTypeComboBox(JComboBox<String> employeeTypeComboBox) {
-		this.employeeTypeComboBox = employeeTypeComboBox;
-	}
-
-	public DefaultButton getPrintButton() {
-		return printButton;
-	}
-
-	public void setPrintButton(DefaultButton printButton) {
-		this.printButton = printButton;
-	}
-
-	public JTextField getPersonnelNoTextField() {
-		return personnelNoTextField;
-	}
-
-	public void setPersonnelNoTextField(JTextField personnelNoTextField) {
-		this.personnelNoTextField = personnelNoTextField;
 	}
 
 }

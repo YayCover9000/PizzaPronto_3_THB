@@ -16,9 +16,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
-
-import de.thb.dim.pizzaPronto.valueObjects.Gender;
 
 @SuppressWarnings("serial")
 public class CustomerPanel extends JPanel {
@@ -31,8 +28,6 @@ public class CustomerPanel extends JPanel {
 	private JTextField firstNameTextField;
 	private JTextField lastNameTextField;
 	private JTextField yearTextField;
-	private JTextField houseNoTextField;
-	private JTextField streetTextField;
 	private JLabel dateOfBirthLabel;
 	private JLabel firstNameLabel;
 	private JLabel lastNameLabel;
@@ -43,14 +38,11 @@ public class CustomerPanel extends JPanel {
 	private JLabel day;
 	private JLabel month;
 	private JLabel year;
-	private JLabel streetLabel;
-	private JLabel houseNoLabel;
-	private JComboBox<Gender> genderComboBox;
+	private JComboBox<String> genderComboBox;
 	private JComboBox<Integer> dayComboBox;
 	private JComboBox<Integer> monthComboBox;
 	private DefaultButton addButton;
 	private DefaultButton removeButton;
-	private DefaultButton printButton;
 	private JTable table;
 	private JScrollPane tableScrollPane;
 	private DefaultTableModel tableModel;
@@ -84,8 +76,7 @@ public class CustomerPanel extends JPanel {
 		c.gridy = 1;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		c.weightx = 0;
-		c.weighty = 1;
+		c.weightx = 0.2;
 		c.insets = new Insets(10, 30, 10, 10);
 		add(addPanel, c);
 
@@ -121,8 +112,7 @@ public class CustomerPanel extends JPanel {
 	private void addComponentsToHintPanel(JPanel hintPanel) {
 		hintPanel.setLayout(new GridBagLayout());
 		hintLabel = new JLabel("<html><p><strong><span style=\"font-size: 10px;\">Hinweis</span></strong></p>\n" + 
-				"<p><span style=\"font-size: 10px;\">Es koennen die Exceptions CustomerNoDateOfBirthException und CustomerTooYoungException ausgegeben werden, " +
-				"indem entweder kein Jahr angegeben wird bzw. das Alter kleiner als 18 Jahre ist.</span></p></html>");
+				"<p><span style=\"font-size: 10px;\">Um einen neuen Kunden anzulegen, muessen in der Klasse CustomerVO die der Initialisierungskonstruktor, die dazugehoerigen Instanzvariablen, die Setter und Getter, sowie die dobToString() Methode implementiert sein.</span></p></html>");
 		
 		
 		GridBagConstraints c = new GridBagConstraints();
@@ -149,156 +139,96 @@ public class CustomerPanel extends JPanel {
 		addTopicLabel.setForeground(Color.DARK_GRAY);
 		c.gridx = 0;
 		c.gridy = 0;
-		c.gridwidth = 2;
 		c.insets = new Insets(10, 12, 0, 10);
 		addPanel.add(addTopicLabel, c);
 				
 		firstNameLabel = new JLabel("First Name:");
 		c.gridx = 0;
 		c.gridy = 2;
-		c.gridwidth = 2;
 		c.insets = new Insets(10, 12, 0, 10);
 		addPanel.add(firstNameLabel, c);
 		
 		firstNameTextField = new JTextField();
 		c.gridx = 0;
 		c.gridy = 3;
-		c.gridwidth = 2;
 		c.insets = new Insets(0, 10, 10, 10);
 		addPanel.add(firstNameTextField, c);
 		
 		lastNameLabel = new JLabel("Last Name:");
 		c.gridx = 0;
 		c.gridy = 4;
-		c.gridwidth = 2;
 		c.insets = new Insets(0, 12, 0, 10);
 		addPanel.add(lastNameLabel, c);
 		
 		lastNameTextField = new JTextField();
 		c.gridx = 0;
 		c.gridy = 5;
-		c.gridwidth = 2;
 		c.insets = new Insets(0, 10, 10, 10);
 		addPanel.add(lastNameTextField, c);
-
-		streetLabel = new JLabel("Street:");
-		c.gridx = 0;
-		c.gridy = 6;
-		c.gridwidth = 1;
-		c.insets = new Insets(0, 12, 0, 10);
-		c.weightx = 1;
-		addPanel.add(streetLabel, c);
-		
-		streetTextField = new JTextField();
-		GridBagConstraints c8 = new GridBagConstraints();
-		c8.gridx = 0;
-		c8.gridy = 7;
-		c8.gridwidth = 1;
-		c8.insets = new Insets(0, 10, 10, 10);
-		c8.fill = GridBagConstraints.HORIZONTAL;
-		addPanel.add(streetTextField, c8);
-		
-		houseNoLabel = new JLabel("No:");
-		c.gridx = 1;
-		c.gridy = 6;
-		c.gridwidth = 1;
-		c.insets = new Insets(0, 12, 0, 10);
-		c.weightx = 0.2;
-		addPanel.add(houseNoLabel, c);
-		
-		houseNoTextField = new JTextField();
-		GridBagConstraints c9 = new GridBagConstraints();
-		c9.gridx = 1;
-		c9.gridy = 7;
-		c9.gridwidth = 1;
-		c9.insets = new Insets(0, 10, 10, 10);
-		c9.fill = GridBagConstraints.HORIZONTAL;
-		addPanel.add(houseNoTextField, c9);
-
-		datePanel = new JPanel(new GridBagLayout());
-		datePanel.setBackground(Color.WHITE);
-		c.gridx = 0;
-		c.gridy = 9;
-		c.gridwidth = 2;
-		c.insets = new Insets(10, 9, 25, 10);
-		addPanel.add(datePanel, c);
 		
 		dateOfBirthLabel = new JLabel("Date of Birth:");
-		GridBagConstraints c7 = new GridBagConstraints();
-		c7.gridx = 0;
-		c7.gridy = 0;
-		c7.gridwidth = 4;
-		c7.anchor = GridBagConstraints.FIRST_LINE_START;
-		c7.insets = new Insets(0,3,10,0);
-		datePanel.add(dateOfBirthLabel, c7);
+		c.gridx = 0;
+		c.gridy = 6;
+		c.insets = new Insets(0, 10, 10, 10);
+		addPanel.add(dateOfBirthLabel, c);
+
+		
+		datePanel = new JPanel();
+//		datePanel.setLayout(new BoxLayout(datePanel, BoxLayout.PAGE_AXIS));
+		datePanel.setBackground(Color.WHITE);
+		c.gridx = 0;
+		c.gridy = 7;
+		c.insets = new Insets(0, 10, 10, 10);
+		addPanel.add(datePanel, c);
 		
 		day = new JLabel("Day:");
-		GridBagConstraints c1 = new GridBagConstraints();
-		c1.gridx = 0;
-		c1.gridy = 1;
-		datePanel.add(day, c1);
+//		day.setAlignmentX(Component.LEFT_ALIGNMENT);
+		datePanel.add(day);
 		
 		Integer[] days = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31};
 		dayComboBox = new JComboBox<Integer>(days);
-		GridBagConstraints c2 = new GridBagConstraints();
-		c2.gridx = 1;
-		c2.gridy = 1;
-		datePanel.add(dayComboBox, c2);
+//		dayComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+		datePanel.add(dayComboBox);
 		
 		month = new JLabel("Month:");
-		GridBagConstraints c3 = new GridBagConstraints();
-		c3.gridx = 2;
-		c3.gridy = 1;
-		datePanel.add(month, c3);
+//		month.setAlignmentX(Component.LEFT_ALIGNMENT);
+		datePanel.add(month);
 		
 		Integer[] months = {1,2,3,4,5,6,7,8,9,10,11,12};
 		monthComboBox = new JComboBox<Integer>(months);
-		GridBagConstraints c4 = new GridBagConstraints();
-		c4.gridx = 3;
-		c4.gridy = 1;
-		datePanel.add(monthComboBox, c4);
+//		monthComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+		datePanel.add(monthComboBox);
 		
 		year = new JLabel("Year:");
-		GridBagConstraints c5 = new GridBagConstraints();
-		c5.gridx = 0;
-		c5.gridy = 2;
-		c5.insets = new Insets(10,3,0,0);
-		datePanel.add(year, c5);
+//		year.setAlignmentX(Component.LEFT_ALIGNMENT);
+		datePanel.add(year);
 		
 		yearTextField = new JTextField();
-		GridBagConstraints c6 = new GridBagConstraints();
-		c6.gridx = 1;
-		c6.gridy = 2;
-		c6.fill = GridBagConstraints.HORIZONTAL;
-		c6.insets = new Insets(10,0,0,0);
-		datePanel.add(yearTextField, c6);
+//		yearTextField.setAlignmentX(Component.LEFT_ALIGNMENT);
+		yearTextField.setPreferredSize(new Dimension(100,25));
+		datePanel.add(yearTextField);
 		
 		
 		genderLabel = new JLabel("Gender:");
-		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
-		c.gridy = 10;
-		c.gridwidth = 2;
-		c.insets = new Insets(0, 12, 5, 10);
+		c.gridy = 8;
+		c.insets = new Insets(0, 12, 0, 10);
 		addPanel.add(genderLabel, c);
 		
-//		String[] genders = {"female", "male", "diverse"};
+		String[] genders = {"female", "male", "diverse"};
 		
-		genderComboBox = new JComboBox<>(Gender.values());
-//		genderComboBox.setEditable(true);
+		genderComboBox = new JComboBox<String>(genders);
+		genderComboBox.setEditable(true);
 		c.gridx = 0;
-		c.gridy = 11;
-		c.gridwidth = 2;
+		c.gridy = 9;
 		c.insets = new Insets(0, 10, 20, 10);
 		addPanel.add(genderComboBox, c);
 		
 		addButton = new DefaultButton("Add Customer");
 		c.gridx = 0;
-		c.gridy = 12;
-		c.gridwidth = 2;
-		c.weighty = 1;
-		c.insets = new Insets(0, 12, 10, 12);
-		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridy = 10;
+		c.insets = new Insets(0, 10, 20, 12);
+		c.fill = GridBagConstraints.NONE;
 		c.anchor = GridBagConstraints.LAST_LINE_END;
 		addPanel.add(addButton, c);
 
@@ -309,12 +239,10 @@ public class CustomerPanel extends JPanel {
 
 		GridBagConstraints c = new GridBagConstraints();
 
-		String[] columns = { "Object", "Customer ID", "First Name", "Last Name", "Street", "No.", "Gender", "Age", "hashCode"};
+		String[] columns = { "First Name", "Last Name", "Gender", "Date of Birth"};
 		tableModel = new DefaultTableModel();
 		tableModel.setColumnIdentifiers(columns);
 		table = new JTable(tableModel);
-		TableColumnModel tcm = table.getColumnModel();
-		tcm.removeColumn(tcm.getColumn(0));
 		table.setFont(new Font("Arial", Font.PLAIN, 14));
 		table.setRowHeight(30);
 		table.setShowGrid(false);
@@ -329,7 +257,6 @@ public class CustomerPanel extends JPanel {
 		tableTopicLabel.setForeground(Color.DARK_GRAY);
 		c.gridx = 0;
 		c.gridy = 0;
-		c.gridwidth = 2;
 		c.anchor = GridBagConstraints.FIRST_LINE_START;
 		c.insets = new Insets(10, 12, 10, 10);
 		tablePanel.add(tableTopicLabel, c);
@@ -341,28 +268,14 @@ public class CustomerPanel extends JPanel {
 		c.gridy = 1;
 		c.weightx = 1;
 		c.weighty = 1;
-		c.gridwidth = 2;
 		c.fill = GridBagConstraints.BOTH;
 		c.insets = new Insets(10, 10, 10, 10);
 		tablePanel.add(tableScrollPane, c);
 		
-		printButton = new DefaultButton("Print Details");
+		removeButton = new DefaultButton("Remove Customer");
 		c.gridx = 0;
 		c.gridy = 2;
 		c.weighty = 0;
-		c.weightx = 1;
-		c.gridwidth = 1;
-		c.fill = GridBagConstraints.NONE;
-		c.anchor = GridBagConstraints.FIRST_LINE_END;
-		c.insets = new Insets(0, 10, 10, 10);
-		tablePanel.add(printButton, c);
-		
-		removeButton = new DefaultButton("Remove Customer");
-		c.gridx = 1;
-		c.gridy = 2;
-		c.weighty = 0;
-		c.weightx = 0;
-		c.gridwidth = 1;
 		c.fill = GridBagConstraints.NONE;
 		c.anchor = GridBagConstraints.FIRST_LINE_END;
 		c.insets = new Insets(0, 10, 10, 10);
@@ -535,11 +448,11 @@ public class CustomerPanel extends JPanel {
 		this.year = year;
 	}
 
-	public JComboBox<Gender> getGenderComboBox() {
+	public JComboBox<String> getGenderComboBox() {
 		return genderComboBox;
 	}
 
-	public void setGenderComboBox(JComboBox<Gender> genderComboBox) {
+	public void setGenderComboBox(JComboBox<String> genderComboBox) {
 		this.genderComboBox = genderComboBox;
 	}
 
@@ -597,30 +510,6 @@ public class CustomerPanel extends JPanel {
 
 	public void setTableModel(DefaultTableModel tableModel) {
 		this.tableModel = tableModel;
-	}
-
-	public DefaultButton getPrintButton() {
-		return printButton;
-	}
-
-	public void setPrintButton(DefaultButton printButton) {
-		this.printButton = printButton;
-	}
-
-	public JTextField getHouseNoTextField() {
-		return houseNoTextField;
-	}
-
-	public void setHouseNoTextField(JTextField houseNoTextField) {
-		this.houseNoTextField = houseNoTextField;
-	}
-
-	public JTextField getStreetTextField() {
-		return streetTextField;
-	}
-
-	public void setStreetTextField(JTextField streetTextField) {
-		this.streetTextField = streetTextField;
 	}
 
 

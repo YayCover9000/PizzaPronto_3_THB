@@ -1,6 +1,7 @@
 package de.thb.dim.pizzaProntoGUI.view;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -15,7 +16,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
 
 @SuppressWarnings("serial")
 public class MenuPanel extends JPanel {
@@ -24,11 +24,9 @@ public class MenuPanel extends JPanel {
 	private JPanel addPanel;
 	private JPanel tablePanel;
 	private JPanel hintPanel;
-	private JPanel buttonPanel;
 	private JTextField nameTextField;
 	private JTextField priceTextField;
 	private JTextField ingredientTextField;
-	private JTextField numberTextField;
 	private JLabel nameLabel;
 	private JLabel priceLabel;
 	private JLabel dishLabel;
@@ -36,18 +34,11 @@ public class MenuPanel extends JPanel {
 	private JLabel tableTopicLabel;
 	private JLabel hintLabel;
 	private JLabel ingredientsLabel;
-	private JLabel numberLabel;
-	private JLabel sizeLabel;
-	private JLabel typeOfPastaLabel;
 	private JComboBox<String> dishComboBox;
-	private JComboBox<Integer> typeComboBox;
-	private JComboBox<Integer> sizeComboBox;
 	private DefaultButton addButton;
 	private DefaultButton removeButton;
 	private DefaultButton addIngredientButton;
 	private DefaultButton removeIngredientButton;
-	private DefaultButton printButton;
-	private DefaultButton copyButton;
 	private JTable table;
 	private JTable ingredientsTable;
 	private JScrollPane tableScrollPane;
@@ -121,8 +112,7 @@ public class MenuPanel extends JPanel {
 	private void addComponentsToHintPanel(JPanel hintPanel) {
 		hintPanel.setLayout(new GridBagLayout());
 		hintLabel = new JLabel("<html><p><strong><span style=\"font-size: 10px;\">Hinweis</span></strong></p>\n" + 
-				"<p><span style=\"font-size: 10px;\">In der Klasse MenuVO muss das Array dishes durch eine ArrayList ersetzt werden. " +
-				"Des Weiteren muessen die Methoden initMenu(), getDish(), getNumberOfDishes(), toString(), sowie der Konstruktor angepasst werden.</span></p></html>");
+				"<p><span style=\"font-size: 10px;\">Um eine neue Pizza hinzuzufuegen, muessen in der Klasse PizzaVO der Intitialisierungskontuktor, die entsprechenden Instanzvariablen und die dazugehoerigen Setter und Getter implementiert sein.</span></p></html>");
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 0;
@@ -153,142 +143,81 @@ public class MenuPanel extends JPanel {
 		dishLabel = new JLabel("Type:");
 		c.gridx = 0;
 		c.gridy = 1;
-		c.gridwidth = 3;
+		c.gridwidth = 2;
 		c.insets = new Insets(10, 12, 0, 10);
 		addPanel.add(dishLabel, c);
 		
-		String[] dishes = {"Pasta", "Pizza", "Dessert"};
+		String[] dishes = {"Pizza"};
 		
 		dishComboBox = new JComboBox<String>(dishes);
 		c.gridx = 0;
 		c.gridy = 2;
-		c.gridwidth = 3;
+		c.gridwidth = 2;
 
 		c.insets = new Insets(0, 10, 10, 10);
 		addPanel.add(dishComboBox, c);
-		
-		//______________________________
-		
-		numberLabel = new JLabel("Number:");
-		GridBagConstraints c1 = new GridBagConstraints();
-		c1.gridx = 0;
-		c1.gridy = 3;
-		c1.insets = new Insets(0, 12, 0, 10);
-		c1.anchor = GridBagConstraints.FIRST_LINE_START;
-		addPanel.add(numberLabel, c1);
-		
-		sizeLabel = new JLabel("Pizza Size:");
-		GridBagConstraints c2 = new GridBagConstraints();
-		c2.gridx = 1;
-		c2.gridy = 3;
-		c2.insets = new Insets(0, 12, 0, 10);
-		c2.anchor = GridBagConstraints.FIRST_LINE_START;
-		addPanel.add(sizeLabel, c2);
-		
-		typeOfPastaLabel = new JLabel("Pasta Type:");
-		GridBagConstraints c3 = new GridBagConstraints();
-		c3.gridx = 2;
-		c3.gridy = 3;
-		c3.insets = new Insets(0, 12, 0, 10);
-		c3.anchor = GridBagConstraints.FIRST_LINE_START;
-		addPanel.add(typeOfPastaLabel, c3);
-		
-		numberTextField = new JTextField();
-		GridBagConstraints c4 = new GridBagConstraints();
-		c4.gridx = 0;
-		c4.gridy = 4;
-		c4.insets = new Insets(0, 12, 0, 10);
-		c4.fill = GridBagConstraints.HORIZONTAL;
-		c4.anchor = GridBagConstraints.FIRST_LINE_START;
-		addPanel.add(numberTextField, c4);
-		
-		Integer[] sizes = {1,2};
-		sizeComboBox = new JComboBox<Integer>(sizes);
-		sizeComboBox.setEnabled(false);
-		GridBagConstraints c5 = new GridBagConstraints();
-		c5.gridx = 1;
-		c5.gridy = 4;
-		c5.insets = new Insets(0, 12, 0, 10);
-		c5.anchor = GridBagConstraints.FIRST_LINE_START;
-		addPanel.add(sizeComboBox, c5);
-		
-		Integer[] types = {4,5,6};
-		typeComboBox = new JComboBox<Integer>(types);
-		GridBagConstraints c6 = new GridBagConstraints();
-		c6.gridx = 2;
-		c6.gridy = 4;
-		c6.insets = new Insets(0, 12, 0, 10);
-		c6.anchor = GridBagConstraints.FIRST_LINE_START;
-		addPanel.add(typeComboBox, c6);
-		
-		
-
-		
-		//______________________________
 				
 		nameLabel = new JLabel("Name:");
 		c.gridx = 0;
-		c.gridy = 5;
-		c.gridwidth = 3;
+		c.gridy = 3;
+		c.gridwidth = 2;
 		c.insets = new Insets(0, 12, 0, 10);
 		addPanel.add(nameLabel, c);
 		
 		nameTextField = new JTextField();
 		c.gridx = 0;
-		c.gridy = 6;
-		c.gridwidth = 3;
+		c.gridy = 4;
+		c.gridwidth = 2;
 		c.insets = new Insets(0, 10, 10, 10);
 		addPanel.add(nameTextField, c);
 		
 		priceLabel = new JLabel("Price:");
 		c.gridx = 0;
-		c.gridy = 7;
-		c.gridwidth = 3;
+		c.gridy = 5;
+		c.gridwidth = 2;
 		c.insets = new Insets(0, 12, 0, 10);
 		addPanel.add(priceLabel, c);
 		
 		priceTextField = new JTextField();
 		c.gridx = 0;
-		c.gridy = 8;
-		c.gridwidth = 3;
+		c.gridy = 6;
+		c.gridwidth = 2;
 		c.insets = new Insets(0, 10, 10, 10);
 		addPanel.add(priceTextField, c);
 		
 		ingredientsLabel = new JLabel("Ingredients:");
 		c.gridx = 0;
-		c.gridy = 9;
-		c.gridwidth = 3;
+		c.gridy = 7;
+		c.gridwidth = 2;
 		c.insets = new Insets(0, 12, 0, 10);
 		addPanel.add(ingredientsLabel, c);
 		
 		ingredientTextField = new JTextField();
 		c.gridx = 0;
-		c.gridy = 10;
-		c.gridwidth = 3;
+		c.gridy = 8;
+		c.gridwidth = 2;
 		c.insets = new Insets(0, 10, 10, 10);
 		addPanel.add(ingredientTextField, c);
 		
-		buttonPanel = new JPanel(new GridBagLayout());
-		buttonPanel.setBackground(Color.white);
-		GridBagConstraints c9 = new GridBagConstraints();
-		c9.gridx = 0;
-		c9.gridy = 11;
-		c9.gridwidth = 3;
-		c9.insets = new Insets(0, 13, 10, 13);
-		addPanel.add(buttonPanel, c9);
-		
 		addIngredientButton = new DefaultButton("Add Ingredient");
-		GridBagConstraints c7 = new GridBagConstraints();
-		c7.gridx = 0;
-		c7.gridy = 0;
-		c7.insets = new Insets(0, 0, 0, 5);
-		buttonPanel.add(addIngredientButton, c7);
+		addIngredientButton.setPreferredSize(new Dimension(20,20));
+		c.gridx = 0;
+		c.gridy = 9;
+		c.gridwidth = 1;
+		c.weightx = 0;
+		c.insets = new Insets(0, 12, 10, 0);
+		c.fill = GridBagConstraints.NONE;
+		addPanel.add(addIngredientButton, c);
 		
 		removeIngredientButton = new DefaultButton("Remove Ingredient");
-		GridBagConstraints c8 = new GridBagConstraints();
-		c8.gridx = 1;
-		c8.gridy = 0;
-		buttonPanel.add(removeIngredientButton, c8);
+		removeIngredientButton.setPreferredSize(new Dimension(20,20));
+		c.gridx = 1;
+		c.gridy = 9;
+		c.gridwidth = 1;
+		c.weightx = 0;
+		c.insets = new Insets(0, 10, 10, 12);
+		c.fill = GridBagConstraints.NONE;
+		addPanel.add(removeIngredientButton, c);
 		
 		String[] ingredientColumn = { "Current Ingredients:" };
 		ingredientTableModel = new DefaultTableModel();
@@ -305,18 +234,18 @@ public class MenuPanel extends JPanel {
 		ingredientsTableScrollPane.setBorder(BorderFactory.createEmptyBorder());
 		ingredientsTableScrollPane.getViewport().setBackground(Color.WHITE);
 		c.gridx = 0;
-		c.gridy = 12;
+		c.gridy = 10;
 		c.weightx = 1;
 		c.weighty = 1;
-		c.gridwidth = 3;
+		c.gridwidth = 2;
 		c.fill = GridBagConstraints.BOTH;
 		c.insets = new Insets(10, 12, 10, 12);
 		addPanel.add(ingredientsTableScrollPane, c);
 						
 		addButton = new DefaultButton("Add Dish");
 		c.gridx = 0;
-		c.gridy = 13;
-		c.gridwidth = 3;
+		c.gridy = 11;
+		c.gridwidth = 2;
 		c.weighty = 0;
 		c.insets = new Insets(10, 10, 10, 12);
 		c.fill = GridBagConstraints.NONE;
@@ -330,13 +259,10 @@ public class MenuPanel extends JPanel {
 
 		GridBagConstraints c = new GridBagConstraints();
 
-		String[] columns = { "Object", "Number", "Type", "Name", "Ingredients", "Size", "Type", "Price", "hashCode"};
+		String[] columns = { "Type", "Name", "Ingredients", "Price" };
 		tableModel = new DefaultTableModel();
 		tableModel.setColumnIdentifiers(columns);
 		table = new JTable(tableModel);
-		table.setDefaultEditor(Object.class, null);
-		TableColumnModel tcm = table.getColumnModel();
-		tcm.removeColumn(tcm.getColumn(0));
 		table.setFont(new Font("Arial", Font.PLAIN, 14));
 		table.setRowHeight(30);
 		table.setShowGrid(false);
@@ -350,7 +276,6 @@ public class MenuPanel extends JPanel {
 		tableTopicLabel.setForeground(Color.DARK_GRAY);
 		c.gridx = 0;
 		c.gridy = 0;
-		c.gridwidth = 3;
 		c.anchor = GridBagConstraints.FIRST_LINE_START;
 		c.insets = new Insets(10, 12, 10, 10);
 		tablePanel.add(tableTopicLabel, c);
@@ -362,41 +287,14 @@ public class MenuPanel extends JPanel {
 		c.gridy = 1;
 		c.weightx = 1;
 		c.weighty = 1;
-		c.gridwidth = 3;
 		c.fill = GridBagConstraints.BOTH;
 		c.insets = new Insets(10, 10, 10, 10);
 		tablePanel.add(tableScrollPane, c);
 		
-		copyButton = new DefaultButton("Copy Dish");
-		copyButton.setVisible(false);
+		removeButton = new DefaultButton("Remove Dish");
 		c.gridx = 0;
 		c.gridy = 2;
 		c.weighty = 0;
-		c.weightx = 1;
-		c.gridwidth = 1;
-		c.fill = GridBagConstraints.NONE;
-		c.anchor = GridBagConstraints.FIRST_LINE_END;
-		c.insets = new Insets(0, 10, 10, 10);
-		tablePanel.add(copyButton, c);
-
-		
-		printButton = new DefaultButton("Print Details");
-		c.gridx = 1;
-		c.gridy = 2;
-		c.weighty = 0;
-		c.weightx = 0;
-		c.gridwidth = 1;
-		c.fill = GridBagConstraints.NONE;
-		c.anchor = GridBagConstraints.FIRST_LINE_END;
-		c.insets = new Insets(0, 10, 10, 10);
-		tablePanel.add(printButton, c);
-		
-		removeButton = new DefaultButton("Remove Dish");
-		c.gridx = 2;
-		c.gridy = 2;
-		c.weighty = 0;
-		c.weightx = 0;
-		c.gridwidth = 1;
 		c.fill = GridBagConstraints.NONE;
 		c.anchor = GridBagConstraints.FIRST_LINE_END;
 		c.insets = new Insets(0, 10, 10, 10);
@@ -623,54 +521,6 @@ public class MenuPanel extends JPanel {
 
 	public void setIngredientTableModel(DefaultTableModel ingredientTableModel) {
 		this.ingredientTableModel = ingredientTableModel;
-	}
-
-	public DefaultButton getPrintButton() {
-		return printButton;
-	}
-
-	public void setPrintButton(DefaultButton printButton) {
-		this.printButton = printButton;
-	}
-
-	public DefaultButton getCopyButton() {
-		return copyButton;
-	}
-
-	public void setCopyButton(DefaultButton copyButton) {
-		this.copyButton = copyButton;
-	}
-
-	public JLabel getTypeOfPastaLabel() {
-		return typeOfPastaLabel;
-	}
-
-	public void setTypeOfPastaLabel(JLabel typeOfPastaLabel) {
-		this.typeOfPastaLabel = typeOfPastaLabel;
-	}
-
-	public JComboBox<Integer> getTypeComboBox() {
-		return typeComboBox;
-	}
-
-	public void setTypeComboBox(JComboBox<Integer> typeComboBox) {
-		this.typeComboBox = typeComboBox;
-	}
-
-	public JComboBox<Integer> getSizeComboBox() {
-		return sizeComboBox;
-	}
-
-	public void setSizeComboBox(JComboBox<Integer> sizeComboBox) {
-		this.sizeComboBox = sizeComboBox;
-	}
-
-	public JTextField getNumberTextField() {
-		return numberTextField;
-	}
-
-	public void setNumberTextField(JTextField numberTextField) {
-		this.numberTextField = numberTextField;
 	}
 
 
