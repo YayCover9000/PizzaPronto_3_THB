@@ -218,9 +218,9 @@ public class OrderPanel extends JPanel{
 	private void addComponentsToHintPanel(JPanel hintPanel) {
 		hintPanel.setLayout(new GridBagLayout());
 		hintLabel = new JLabel("<html><p><strong><span style=\"font-size: 10px;\">Hinweis</span></strong></p>\n" + 
-				"<p><span style=\"font-size: 10px;\">In der Klasse OrderVO, muss die neue Liste implementiert werden und die Verwaltungsmethoden angepasst werden. " +
-				"Damit der Status richtig angezeigt wird, muss die neue Enumeration StateOfOrderVO implementiert sein. " +
-				"Um die Sortierfunktion zu nutzen, muessen die Methoden sortShoppingBasket(), sortShoppingBasketByNumber() und sortShoppingBasketByPrice() implementiert sein.</span></p></html>");
+				"<p><span style=\"font-size: 10px;\">Ueber die Buttons 'New Order', 'Add Dish', 'Delete Dish', 'Confirm Order' und ueber die Sortierauswahl koennen " +
+				"die Exceptions NoOrderException und IllegalStateException, je nach Kombination aus Status und Vorhandensein einer Bestellung, " +
+				"ausgegeben werden. Die NoCustomerException laesst sich ueber das GUI nicht ausgeben.</span></p></html>");
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 0;

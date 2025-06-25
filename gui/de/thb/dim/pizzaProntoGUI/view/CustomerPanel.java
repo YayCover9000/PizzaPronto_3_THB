@@ -121,8 +121,8 @@ public class CustomerPanel extends JPanel {
 	private void addComponentsToHintPanel(JPanel hintPanel) {
 		hintPanel.setLayout(new GridBagLayout());
 		hintLabel = new JLabel("<html><p><strong><span style=\"font-size: 10px;\">Hinweis</span></strong></p>\n" + 
-				"<p><span style=\"font-size: 10px;\">Um die ComboBox für das Geschlecht zu nutzen, muss die neue Enumeration 'Gender' implementiert werden. " +
-				"Welche Auswahlmoeglichkeiten dem Nutzer dabei zur Verfuegung gestellt werden, kann durch die eigene Implementierung festgelegt werden.</span></p></html>");
+				"<p><span style=\"font-size: 10px;\">Es koennen die Exceptions CustomerNoDateOfBirthException und CustomerTooYoungException ausgegeben werden, " +
+				"indem entweder kein Jahr angegeben wird bzw. das Alter kleiner als 18 Jahre ist.</span></p></html>");
 		
 		
 		GridBagConstraints c = new GridBagConstraints();

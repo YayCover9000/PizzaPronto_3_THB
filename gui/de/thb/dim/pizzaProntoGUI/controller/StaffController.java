@@ -234,7 +234,7 @@ public class StaffController {
 			public void tableChanged(TableModelEvent e) {
 				int index = staffTable.getSelectedRow();
 				
-				if(index != -1 && e.getType() != e.DELETE) {
+				if(index != -1 && e.getType() != -1) { // e.getType() != -1 bei remove nicht ausführen
 										
 					EmployeeVO employee = (EmployeeVO) staffTableModel.getValueAt(index, 0);
 					
